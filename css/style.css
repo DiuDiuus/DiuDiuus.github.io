@@ -1069,8 +1069,12 @@ a.has-text-grey-lightest:focus {
 .is-family-secondary {
   font-family: Ubuntu, Roboto, 'Open Sans', 'Microsoft YaHei', sans-serif !important;
 }
+#.is-family-sans-serif {
+#  font-family: Ubuntu, Roboto, 'Open Sans', 'Microsoft YaHei', sans-serif !important;
+#}
+@import url(https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css)
 .is-family-sans-serif {
-  font-family: Ubuntu, Roboto, 'Open Sans', 'Microsoft YaHei', sans-serif !important;
+  font-family: 'NanumSquareRound', "Helvetica Neue",  sans-serif !important;
 }
 .is-family-monospace {
   font-family: monospace !important;
