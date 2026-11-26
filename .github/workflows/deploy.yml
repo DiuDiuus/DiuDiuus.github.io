@@ -11,7 +11,21 @@ permissions:
   id-token: write
 
 jobs:
+  # A failing check (content format, phone number in the CV, placeholder text…) stops the deploy.
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run test:dist
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout your repository using git

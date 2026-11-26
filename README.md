@@ -40,13 +40,19 @@ Beyond Work 항목의 `kind`는 세 가지예요. `value`(가치관)는 펼쳐 �
 
 ## 사진·CV 바꾸기
 
-- **사진:** 새 사진을 `public/images/profile.jpg`로 바꿔 넣은 뒤, 위치 정보 같은 메타데이터를 지워요.
+- **사진:** 새 사진을 긴 변 800px 이하로 줄여 `public/images/profile.jpg`로 저장한 뒤, 위치 정보 같은 메타데이터를 지워요. 사진이 회전 정보에 의존하면(휴대폰 세로 사진에 흔함) 스크립트가 멈추고 안내해요. 그럴 땐 미리보기 앱에서 회전해 다시 저장한 뒤 실행하세요.
+
+  ```bash
+  sips -Z 800 새사진.jpg --out public/images/profile.jpg
+  ```
 
   ```bash
   node scripts/strip-exif.mjs public/images/profile.jpg public/images/profile.jpg
   ```
 
-- **CV:** `public/cv/Jiwoo_Kim_CV.pdf`를 바꿔 넣어요. **전화번호가 없는 버전**이어야 해요. 자동 검사가 전화번호를 찾으면 테스트가 실패해요.
+- **CV:** `public/cv/Jiwoo_Kim_CV.pdf`를 바꿔 넣어요. **전화번호가 없는 버전**이어야 해요. 자동 검사가 전화번호를 찾으면 테스트가 실패하고, GitHub도 배포를 멈춰요.
+
+`ko:`나 선택 항목(`result:` 등)은 비워둬도 돼요. 비어 있으면 영어가 대신 보이거나 그 줄이 생략돼요.
 
 ## 로컬에서 보기 · 검사하기
 

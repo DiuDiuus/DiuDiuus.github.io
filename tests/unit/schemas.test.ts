@@ -50,7 +50,48 @@ describe('schema rules', () => {
   });
 });
 
+describe('blank fields written by hand', () => {
+  it('treats an empty ko: block as missing', () => {
+    const r = projectSchema.parse({ ...validProject, ko: null });
+    expect(r.ko).toBeUndefined();
+  });
+  it('treats empty or blank Korean fields as missing', () => {
+    const r = projectSchema.parse({ ...validProject, ko: { title: null, summary: '   ', problem: '문제' } });
+    expect(r.ko).toEqual({ problem: '문제' });
+  });
+  it('treats an empty optional English field as missing', () => {
+    const r = projectSchema.parse({ ...validProject, en: { ...validProject.en, result: null } });
+    expect(r.en.result).toBeUndefined();
+  });
+  it('rejects a whitespace-only English title', () => {
+    expect(projectSchema.safeParse({ ...validProject, en: { ...validProject.en, title: '   ' } }).success).toBe(false);
+  });
+  it('treats empty lists as empty', () => {
+    const r = projectSchema.parse({ ...validProject, tags: null, links: null });
+    expect(r.tags).toEqual([]);
+    expect(r.links).toEqual([]);
+  });
+  it('applies the same rules to research, experience and profile text', () => {
+    expect(researchSchema.parse({ kind: 'paper', year: 2024, authors: 'A', venue: 'V', links: null, en: { title: 'T', summary: '' }, ko: null }).en.summary).toBeUndefined();
+    expect(experienceSchema.parse({ kind: 'work', org: 'O', start: '2022-05', projects: null, en: { role: 'R' }, ko: { role: ' ', org: null } }).ko).toEqual({});
+  });
+});
+
 describe('CV-derived content', () => {
+  it('uses the CV project names as titles', () => {
+    const cvTitles = [
+      'Synthetic Data Generation',
+      'Data Integration',
+      'Financial Early Warning System',
+      'Semiconductor Market Risk Index',
+      'Medical Research Recommendation',
+    ];
+    for (const { file, raw } of load('projects')) {
+      const title: string = parse(raw).en.title;
+      expect(cvTitles.some((t) => title.startsWith(t)), `${file}: ${title}`).toBe(true);
+    }
+  });
+
   const projects = load('projects').map(({ raw }) => projectSchema.parse(parse(raw)));
   it('has five projects, three of them featured', () => {
     expect(projects).toHaveLength(5);

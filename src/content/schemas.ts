@@ -1,66 +1,65 @@
 import { z } from 'astro/zod';
 
-const yearMonth = z.string().regex(/^\d{4}-\d{2}$/, 'use "YYYY-MM"');
-const link = z.object({ label: z.string().min(1), url: z.url() });
-const localized = z.object({ en: z.string().min(1), ko: z.string().optional() });
+// Hand-edited YAML: an empty value (`ko:`, `result:`) parses as null and a blank one as "  ".
+// Both mean "not filled in", so optional fields fall back instead of breaking the build.
+const isBlank = (v: unknown) => v == null || (typeof v === 'string' && v.trim() === '');
+const blankToUndefined = (v: unknown) => (isBlank(v) ? undefined : v);
+const dropBlankKeys = (v: unknown) =>
+  v && typeof v === 'object' && !Array.isArray(v)
+    ? Object.fromEntries(Object.entries(v).filter(([, x]) => !isBlank(x)))
+    : v;
 
-const projectText = z.object({
-  title: z.string().min(1),
-  summary: z.string().min(1),
-  problem: z.string().min(1),
-  approach: z.string().min(1),
-  result: z.string().optional(),
-});
+const required = z.string().trim().min(1);
+const optional = z.preprocess(blankToUndefined, z.string().trim().optional());
+const list = <T extends z.ZodType>(item: T) => z.preprocess((v) => v ?? [], z.array(item));
+/** An `en:`/`ko:` block: blank keys are dropped; an empty `ko:` counts as absent. */
+const block = <T extends z.ZodRawShape>(shape: T) => z.preprocess(dropBlankKeys, z.object(shape));
+const optionalBlock = <T extends z.ZodRawShape>(shape: T) =>
+  z.preprocess(blankToUndefined, block(shape).optional());
+
+const yearMonth = z.string().regex(/^\d{4}-\d{2}$/, 'use "YYYY-MM"');
+const link = z.object({ label: required, url: z.url() });
+const localized = z.object({ en: required, ko: optional });
 
 export const projectSchema = z.object({
   order: z.number().int(),
   featured: z.boolean().optional(),
-  org: z.string().min(1),
+  org: required,
   start: yearMonth,
-  end: yearMonth.optional(),
-  tags: z.array(z.string()).default([]),
-  links: z.array(link).default([]),
-  en: projectText,
-  ko: projectText.partial().optional(),
+  end: z.preprocess(blankToUndefined, yearMonth.optional()),
+  tags: list(z.string()),
+  links: list(link),
+  en: block({ title: required, summary: required, problem: required, approach: required, result: optional }),
+  ko: optionalBlock({ title: optional, summary: optional, problem: optional, approach: optional, result: optional }),
 });
-
-const researchText = z.object({ title: z.string().min(1), summary: z.string().optional() });
 
 export const researchSchema = z.object({
   kind: z.enum(['paper', 'talk']),
   year: z.number().int(),
-  authors: z.string().min(1),
-  venue: z.string().min(1),
-  doi: z.string().optional(),
-  links: z.array(link).default([]),
-  en: researchText,
-  ko: researchText.partial().optional(),
-});
-
-const experienceText = z.object({
-  role: z.string().min(1),
-  org: z.string().optional(),
-  detail: z.string().optional(),
+  authors: required,
+  venue: required,
+  doi: optional,
+  links: list(link),
+  en: block({ title: required, summary: optional }),
+  ko: optionalBlock({ title: optional, summary: optional }),
 });
 
 export const experienceSchema = z.object({
   kind: z.enum(['work', 'education']),
-  org: z.string().min(1),
-  location: z.string().optional(),
+  org: required,
+  location: optional,
   start: yearMonth,
-  end: yearMonth.optional(),
-  projects: z.array(z.string()).default([]),
-  en: experienceText,
-  ko: experienceText.partial().optional(),
+  end: z.preprocess(blankToUndefined, yearMonth.optional()),
+  projects: list(z.string()),
+  en: block({ role: required, org: optional, detail: optional }),
+  ko: optionalBlock({ role: optional, org: optional, detail: optional }),
 });
-
-const beyondText = z.object({ title: z.string().min(1), detail: z.string().optional() });
 
 export const beyondSchema = z.object({
   kind: z.enum(['value', 'hobby', 'taste']),
   order: z.number().int(),
-  en: beyondText,
-  ko: beyondText.partial().optional(),
+  en: block({ title: required, detail: optional }),
+  ko: optionalBlock({ title: optional, detail: optional }),
 });
 
 export const profileSchema = z.object({
@@ -78,8 +77,8 @@ export const profileSchema = z.object({
   interests: z.array(z.string()).min(1),
   email: z.email(),
   links: z.object({
-    github: z.string().default(''),
-    linkedin: z.string().default(''),
-    scholar: z.string().default(''),
+    github: z.preprocess((v) => v ?? '', z.string()),
+    linkedin: z.preprocess((v) => v ?? '', z.string()),
+    scholar: z.preprocess((v) => v ?? '', z.string()),
   }),
 });
