@@ -1,0 +1,9 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { t } from '../i18n/ui';
+---
+
+<SiteLayout lang="en" tab="about" title={t('en', 'notFound')}>
+  <h1 class="page-title">{t('en', 'notFound')}</h1>
+  <p class="lead"><a href="/">{t('en', 'backHome')}</a> · <a href="/ko/">{t('ko', 'backHome')}</a></p>
+</SiteLayout>

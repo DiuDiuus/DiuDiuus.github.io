@@ -1,0 +1,34 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import ProjectItem from '../components/ProjectItem.astro';
+import { t } from '../i18n/ui';
+import { pick, tabPath, type Lang } from '../i18n/utils';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { featured } from '../lib/sort';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const profile = (await getEntry('profile', 'main'))!.data;
+const projects = featured(await getCollection('projects'));
+---
+
+<SiteLayout lang={lang} tab="about" title={t(lang, 'nav.about')}>
+  <h1 class="page-title">{t(lang, 'nav.about')}</h1>
+  <p class="lead">{pick(profile.intro, lang)}</p>
+  <div class="facts">
+    <span><b>{t(lang, 'now')}</b>{pick(profile.now, lang)}</span>
+    <span><b>{t(lang, 'next')}</b>{pick(profile.next, lang)}</span>
+    <span><b>{t(lang, 'basedIn')}</b>{pick(profile.basedIn, lang)}</span>
+  </div>
+  <div class="label"><span>{t(lang, 'skills')}</span></div>
+  <div class="chips">{profile.skills.map((s) => <span class="chip">{s}</span>)}</div>
+  <div class="label"><span>{t(lang, 'languages')}</span></div>
+  <p>{pick(profile.languages, lang)}</p>
+  <div class="label">
+    <span>{t(lang, 'featured')}</span>
+    <a href={tabPath('projects', lang)}>{t(lang, 'seeAll')}</a>
+  </div>
+  {projects.map((entry) => <ProjectItem entry={entry} lang={lang} />)}
+</SiteLayout>

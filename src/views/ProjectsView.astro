@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectItem from '../components/ProjectItem.astro';
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/utils';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { byOrder } from '../lib/sort';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const projects = byOrder(await getCollection('projects'));
+---
+
+<SiteLayout lang={lang} tab="projects" title={t(lang, 'nav.projects')}>
+  <h1 class="page-title">{t(lang, 'nav.projects')}</h1>
+  {projects.map((entry) => <ProjectItem entry={entry} lang={lang} />)}
+</SiteLayout>
+
+<script>
+  // /projects/#<id> (linked from Experience) opens that project
+  const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (target instanceof HTMLDetailsElement) {
+    target.open = true;
+    target.scrollIntoView({ block: 'start' });
+  }
+</script>

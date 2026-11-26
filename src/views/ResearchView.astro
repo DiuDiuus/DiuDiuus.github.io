@@ -1,0 +1,61 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Toggle from '../components/Toggle.astro';
+import { t } from '../i18n/ui';
+import { locText, pick, type Lang } from '../i18n/utils';
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const profile = (await getEntry('profile', 'main'))!.data;
+const papers = (await getCollection('research')).sort((a, b) => b.data.year - a.data.year);
+---
+
+<SiteLayout lang={lang} tab="research" title={t(lang, 'nav.research')}>
+  <h1 class="page-title">{t(lang, 'nav.research')}</h1>
+  <div class="label"><span>{t(lang, 'currentResearch')}</span></div>
+  <p class="lead">{pick(profile.currentResearch, lang)}</p>
+  <div class="label"><span>{t(lang, 'interests')}</span></div>
+  <div class="chips">{profile.interests.map((s) => <span class="chip">{s}</span>)}</div>
+  <div class="label"><span>{t(lang, 'publications')}</span></div>
+  {
+    papers.map((entry) => {
+      const d = entry.data;
+      const text = locText(d.en, d.ko, lang);
+      return (
+        <Toggle id={entry.id}>
+          <Fragment slot="summary">
+            <span class="s-title">{text.title}</span>
+            <span class="s-meta">
+              {d.venue} · {d.year}
+            </span>
+          </Fragment>
+          <dl>
+            <dt>{t(lang, 'authors')}</dt>
+            <dd>{d.authors}</dd>
+            {text.summary && (
+              <>
+                <dt>{t(lang, 'summary')}</dt>
+                <dd>{text.summary}</dd>
+              </>
+            )}
+          </dl>
+          <div class="links">
+            {d.doi && (
+              <a href={`https://doi.org/${d.doi}`} target="_blank" rel="noopener">
+                DOI ↗
+              </a>
+            )}
+            {d.links.map((l) => (
+              <a href={l.url} target="_blank" rel="noopener">
+                {l.label} ↗
+              </a>
+            ))}
+          </div>
+        </Toggle>
+      );
+    })
+  }
+</SiteLayout>

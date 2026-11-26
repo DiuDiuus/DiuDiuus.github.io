@@ -1,4 +1,11 @@
-<details class="item">
+---
+interface Props {
+  id?: string;
+}
+const { id } = Astro.props;
+---
+
+<details class="item" id={id}>
   <summary>
     <span class="summary"><slot name="summary" /></span>
     <span class="plus" aria-hidden="true">+</span>

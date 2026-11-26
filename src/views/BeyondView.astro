@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import Toggle from '../components/Toggle.astro';
+import { t } from '../i18n/ui';
+import { locText, type Lang } from '../i18n/utils';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { byOrder } from '../lib/sort';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const all = byOrder(await getCollection('beyond'));
+const values = all.filter((e) => e.data.kind === 'value');
+const others = all.filter((e) => e.data.kind !== 'value');
+---
+
+<SiteLayout lang={lang} tab="beyond" title={t(lang, 'nav.beyond')}>
+  <h1 class="page-title">{t(lang, 'nav.beyond')}</h1>
+  {
+    values.map((entry) => {
+      const text = locText(entry.data.en, entry.data.ko, lang);
+      return (
+        <Toggle id={entry.id}>
+          <span class="s-title" slot="summary">
+            {text.title}
+          </span>
+          {text.detail && <p>{text.detail}</p>}
+        </Toggle>
+      );
+    })
+  }
+  {
+    others.length > 0 && (
+      <div class="chips beyond-chips">
+        {others.map((entry) => {
+          const text = locText(entry.data.en, entry.data.ko, lang);
+          return (
+            <span class="chip" title={text.detail}>
+              {text.title}
+            </span>
+          );
+        })}
+      </div>
+    )
+  }
+</SiteLayout>

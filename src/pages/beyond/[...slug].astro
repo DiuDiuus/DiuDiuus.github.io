@@ -1,0 +1,11 @@
+---
+import { getCollection } from 'astro:content';
+import BeyondView from '../../views/BeyondView.astro';
+
+// Generates /beyond/ only once src/content/beyond has at least one entry.
+export async function getStaticPaths() {
+  return (await getCollection('beyond')).length > 0 ? [{ params: { slug: undefined } }] : [];
+}
+---
+
+<BeyondView lang="en" />

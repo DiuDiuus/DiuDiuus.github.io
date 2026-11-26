@@ -1,0 +1,57 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { t } from '../i18n/ui';
+import { locText, type Lang } from '../i18n/utils';
+import { formatPeriod } from '../lib/dates';
+import Toggle from './Toggle.astro';
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+  lang: Lang;
+}
+const { entry, lang } = Astro.props;
+const d = entry.data;
+const text = locText(d.en, d.ko, lang);
+---
+
+<Toggle id={entry.id}>
+  <Fragment slot="summary">
+    <span class="s-title">{text.title}</span>
+    <span class="s-meta">{d.org} · {formatPeriod(d.start, d.end, lang)}</span>
+  </Fragment>
+  <p class="s-lead">{text.summary}</p>
+  <dl>
+    <dt>{t(lang, 'problem')}</dt>
+    <dd>{text.problem}</dd>
+    <dt>{t(lang, 'approach')}</dt>
+    <dd>{text.approach}</dd>
+    {
+      text.result && (
+        <>
+          <dt>{t(lang, 'result')}</dt>
+          <dd>{text.result}</dd>
+        </>
+      )
+    }
+  </dl>
+  {
+    d.tags.length > 0 && (
+      <div class="chips tags">
+        {d.tags.map((tag) => (
+          <span class="chip">{tag}</span>
+        ))}
+      </div>
+    )
+  }
+  {
+    d.links.length > 0 && (
+      <div class="links">
+        {d.links.map((l) => (
+          <a href={l.url} target="_blank" rel="noopener">
+            {l.label} ↗
+          </a>
+        ))}
+      </div>
+    )
+  }
+</Toggle>
