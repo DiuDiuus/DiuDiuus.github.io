@@ -25,7 +25,7 @@ const hasBeyond = (await getCollection('beyond')).length > 0;
 
 const description = pick(profile.tagline, lang);
 const fullTitle = `${title} — ${pick(profile.name, lang)}`;
-const site = Astro.site ?? new URL('https://jiwookim.dev');
+const site = Astro.site ?? new URL('https://diudiuus.github.io');
 const url = (path: string) => new URL(path, site).href;
 ---
 

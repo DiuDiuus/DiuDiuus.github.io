@@ -1,6 +1,14 @@
-# jiwookim.dev
+# Jiwoo Kim — personal homepage
 
-김지우의 개인 홈페이지예요. 영어가 기본이고 한국어(`/ko/`)도 있어요. Astro로 만들었고, `main` 브랜치에 push하면 GitHub Pages에 자동으로 배포돼요.
+김지우의 개인 홈페이지예요. 주소는 https://diudiuus.github.io/ 이고, 영어가 기본이며 한국어(`/ko/`)도 있어요. Astro로 만들었고, `main` 브랜치에 push하면 GitHub Pages에 자동으로 배포돼요.
+
+나중에 도메인(예: `jiwookim.dev`)을 사면 다음 순서로 연결해요.
+
+1. `astro.config.mjs`의 `site`를 새 주소로 바꿔요.
+2. `public/CNAME` 파일에 도메인 한 줄을 넣어요.
+3. GitHub의 Settings → Pages에서 Custom domain을 입력해요.
+4. 도메인 구매처에서 DNS를 설정해요.
+5. `tests/dist/site.test.ts`의 주소 검사도 새 주소로 바꿔요.
 
 ## 내용 고치기
 

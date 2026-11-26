@@ -53,8 +53,13 @@ describe('pages', () => {
     expect(read(`ko/${p}index.html`)).toContain('<html lang="ko"');
   });
 
-  it('ships a CNAME for the custom domain', () => {
-    expect(read('CNAME').trim()).toBe('jiwookim.dev');
+  it('is addressed at the free github.io site (no custom domain yet)', () => {
+    expect(existsSync(join(dist, 'CNAME'))).toBe(false);
+    expect(read('index.html')).toContain('<link rel="canonical" href="https://diudiuus.github.io/"');
+    expect(read('ko/projects/index.html')).toContain('content="https://diudiuus.github.io/images/profile.jpg"');
+    for (const f of textFiles()) {
+      expect(readFileSync(f, 'utf8'), f).not.toContain('jiwookim.dev');
+    }
   });
 
   it('has a 404 page', () => {
