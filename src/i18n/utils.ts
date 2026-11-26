@@ -15,6 +15,11 @@ export function locText<T extends object>(en: T, ko: Partial<T> | undefined, lan
   return merged;
 }
 
+/** One localized string (`{ en, ko? }`) with English fallback. */
+export function pick(value: { en: string; ko?: string }, lang: Lang): string {
+  return lang === 'ko' && value.ko ? value.ko : value.en;
+}
+
 export function tabPath(tab: Tab, lang: Lang): string {
   const prefix = lang === 'ko' ? '/ko' : '';
   return tab === 'about' ? `${prefix}/` : `${prefix}/${tab}/`;

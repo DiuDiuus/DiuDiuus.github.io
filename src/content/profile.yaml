@@ -1,0 +1,53 @@
+main:
+  name:
+    en: Jiwoo Kim
+    ko: 김지우
+  title:
+    en: "Data Scientist · Integrated M.S./Ph.D. Student"
+    ko: "데이터 사이언티스트 · 석·박사 통합과정"
+  affiliation:
+    en: "Statistics & Data Science, Yonsei University · Seoul"
+    ko: "연세대학교 통계데이터사이언스학과 · 서울"
+  tagline:
+    en: "Data scientist with ~3 years in industry, now researching graph anomaly detection."
+    ko: "약 3년의 실무 경험을 가진 데이터 사이언티스트, 지금은 그래프 이상탐지를 연구합니다."
+  intro:
+    en: "I'm an integrated M.S./Ph.D. student at Yonsei University, researching graph anomaly detection. I also have nearly three years of industry experience building data and AI systems for synthetic data, financial risk, and text analytics."
+    ko: "연세대학교 통계데이터사이언스학과 석·박사 통합과정에서 그래프 이상탐지를 연구하고 있습니다. 합성데이터, 금융 리스크, 텍스트 분석 분야에서 데이터·AI 시스템을 만든 약 3년의 실무 경험이 있습니다."
+  now:
+    en: "Integrated M.S./Ph.D., Yonsei (2021–)"
+    ko: "연세대 석·박사 통합과정 (2021–)"
+  next:
+    en: "Data Scientist roles, 2027"
+    ko: "2027년 데이터 사이언티스트 지원 예정"
+  basedIn:
+    en: Seoul
+    ko: 서울
+  currentResearch:
+    en: "My doctoral research focuses on graph anomaly detection."
+    ko: "박사과정에서는 그래프 이상탐지를 중심으로 연구하고 있습니다."
+  languages:
+    en: "Korean (Native), English (Professional)"
+    ko: "한국어(모국어), 영어(업무 가능)"
+  skills:
+    - Python
+    - R
+    - SQL
+    - Machine Learning
+    - Deep Learning
+    - NLP / Text Mining
+    - Time-Series Analysis
+    - Synthetic Data Generation
+    - Data Integration
+    - Risk Index Construction
+  interests:
+    - Graph Anomaly Detection
+    - Time-Series Analysis
+    - Text Mining & NLP for Economic/Market Indicators
+    - Financial Risk Monitoring
+    - Synthetic Data Generation
+  email: zioo1004_@yonsei.ac.kr
+  links:
+    github: ""
+    linkedin: ""
+    scholar: ""

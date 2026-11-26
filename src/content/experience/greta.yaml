@@ -1,0 +1,12 @@
+kind: work
+org: Greta Inc.
+location: Seoul, Korea
+start: "2022-05"
+end: "2025-01"
+projects: [synthetic-data-generation, data-integration, financial-early-warning, semiconductor-risk-index]
+en:
+  role: Data Scientist
+  detail: Built data and AI systems for synthetic data, data integration, financial risk, and text analytics.
+ko:
+  role: 데이터 사이언티스트
+  detail: 합성데이터, 데이터 통합, 금융 리스크, 텍스트 분석을 위한 데이터·AI 시스템을 개발했습니다.

@@ -1,0 +1,17 @@
+order: 1
+featured: true
+org: Greta Inc.
+start: "2022-05"
+end: "2025-01"
+tags: [Synthetic data, Privacy, Tabular & time series]
+links: []
+en:
+  title: Synthetic Data Generation System
+  summary: A system for sharing sensitive tabular and time-series data safely through synthetic data.
+  problem: Sensitive tabular and time-series data could not be shared freely because of privacy constraints.
+  approach: Designed and developed a synthetic data generation system for secure, privacy-preserving data sharing, and evaluated the synthetic outputs on statistical fidelity, downstream ML utility, and disclosure risk.
+ko:
+  title: 합성데이터 생성 시스템
+  summary: 민감한 정형·시계열 데이터를 합성데이터로 안전하게 공유하는 시스템
+  problem: 민감한 정형·시계열 데이터는 개인정보 보호 문제로 자유롭게 공유하기 어려웠습니다.
+  approach: 안전하고 프라이버시를 보호하는 데이터 공유를 위해 합성데이터 생성 시스템을 설계·개발했고, 생성된 데이터를 통계적 충실도, 다운스트림 ML 활용도, 노출 위험 측면에서 평가했습니다.

@@ -1,0 +1,11 @@
+kind: education
+org: Yonsei University
+location: Seoul, Korea
+start: "2021-03"
+en:
+  role: Integrated M.S./Ph.D. Program, Statistics and Data Science
+  detail: Researching graph anomaly detection.
+ko:
+  role: 통계데이터사이언스학과 석·박사 통합과정
+  org: 연세대학교
+  detail: 그래프 이상탐지를 연구하고 있습니다.

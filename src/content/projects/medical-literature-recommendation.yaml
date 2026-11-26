@@ -1,0 +1,16 @@
+order: 5
+org: Tesser Inc.
+start: "2021-01"
+end: "2021-03"
+tags: [NLP, Recommendation, Similarity search]
+links: []
+en:
+  title: Medical Case Report Recommendation
+  summary: Recommending relevant case reports by analyzing medical literature.
+  problem: Relevant case reports had to be identified from a large body of medical literature.
+  approach: Developed a text-based recommendation system using NLP-based document representations and similarity search.
+ko:
+  title: 의학 증례 보고 추천 시스템
+  summary: 의학 문헌을 분석해 관련 증례 보고를 추천
+  problem: 방대한 의학 문헌 속에서 관련 있는 증례 보고를 찾아내야 했습니다.
+  approach: NLP 기반 문서 표현과 유사도 검색을 활용한 텍스트 기반 추천 시스템을 개발했습니다.

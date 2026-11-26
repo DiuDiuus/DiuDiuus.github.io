@@ -1,0 +1,17 @@
+order: 2
+featured: true
+org: Greta Inc.
+start: "2022-05"
+end: "2025-01"
+tags: [Financial risk, Early warning, Predictive modeling]
+links: []
+en:
+  title: Financial Early Warning System (Vietnam)
+  summary: An early warning system for Vietnam's financial sector, built for a crisis management capacity-building project.
+  problem: As part of a crisis management capacity-building project, Vietnam's financial sector needed a way to detect signals of potential systemic stress early.
+  approach: Constructed macro-financial indicators and built predictive models that detect signals of potential systemic stress.
+ko:
+  title: 금융 조기경보시스템 (베트남)
+  summary: 위기관리 역량강화 사업의 일환으로 만든 베트남 금융부문 조기경보시스템
+  problem: 위기관리 역량강화 사업의 일환으로, 베트남 금융부문의 잠재적 시스템 리스크 신호를 미리 포착할 방법이 필요했습니다.
+  approach: 거시금융 지표를 구축하고, 잠재적 시스템 리스크 신호를 탐지하는 예측 모형을 개발했습니다.

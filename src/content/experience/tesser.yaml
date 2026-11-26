@@ -1,0 +1,12 @@
+kind: work
+org: Tesser Inc.
+location: Seoul, Korea
+start: "2021-01"
+end: "2021-03"
+projects: [medical-literature-recommendation]
+en:
+  role: AI Engineer
+  detail: Built an NLP-based recommendation system for medical literature.
+ko:
+  role: AI 엔지니어
+  detail: 의학 문헌을 위한 NLP 기반 추천 시스템을 개발했습니다.
