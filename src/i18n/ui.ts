@@ -5,7 +5,7 @@ const en = {
   'nav.projects': 'Projects',
   'nav.research': 'Research',
   'nav.experience': 'Experience',
-  'nav.beyond': 'Beyond Work',
+  'nav.beyond': 'Life & Values',
   cv: 'CV',
   email: 'Email',
   seeAll: 'See all →',
