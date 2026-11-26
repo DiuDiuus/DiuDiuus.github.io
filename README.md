@@ -20,7 +20,7 @@
 | 프로젝트 추가 | `src/content/projects/`에서 파일 하나를 복사해 새 이름으로 저장하고 내용 수정 |
 | 논문·발표 추가 | `src/content/research/`에서 같은 방법 |
 | 경력·학력 추가 | `src/content/experience/`에서 같은 방법 |
-| Beyond Work(취미·취향·가치관) | `src/content/beyond/`에 파일을 하나라도 넣으면 탭이 자동으로 나타나요 |
+| Life & Values(지향·취미·취향) | `src/content/beyond/`에 파일을 넣거나 고쳐요. 파일이 하나도 없으면 탭이 숨겨져요 |
 
 파일 하나에 영어(`en:`)와 한국어(`ko:`)가 함께 들어가요. `ko:`를 비워두면 한국어 페이지에는 영어가 대신 보여요.
 
@@ -44,7 +44,7 @@ ko:
   title: ...
 ```
 
-Beyond Work 항목의 `kind`는 세 가지예요. `value`(가치관)는 펼쳐 보는 항목이 되고, `hobby`(취미)와 `taste`(취향)는 태그로 보여요.
+Life & Values(`src/content/beyond/`) 항목의 `kind`는 세 가지예요. `value`(지향)는 핵심어와 한 줄 설명으로, `hobby`(취미)는 태그로, `taste`(취향)는 "항목: 내용" 한 줄로 보여요.
 
 ## 사진·CV 바꾸기
 

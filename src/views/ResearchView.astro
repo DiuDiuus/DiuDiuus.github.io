@@ -1,6 +1,6 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
-import Toggle from '../components/Toggle.astro';
+import Card from '../components/Card.astro';
 import { t } from '../i18n/ui';
 import { locText, pick, type Lang } from '../i18n/utils';
 import SiteLayout from '../layouts/SiteLayout.astro';
@@ -25,8 +25,8 @@ const papers = (await getCollection('research')).sort((a, b) => b.data.year - a.
       const d = entry.data;
       const text = locText(d.en, d.ko, lang);
       return (
-        <Toggle id={entry.id}>
-          <Fragment slot="summary">
+        <Card id={entry.id}>
+          <Fragment slot="head">
             <span class="s-title">{text.title}</span>
             <span class="s-meta">
               {d.venue} · {d.year}
@@ -54,7 +54,7 @@ const papers = (await getCollection('research')).sort((a, b) => b.data.year - a.
               </a>
             ))}
           </div>
-        </Toggle>
+        </Card>
       );
     })
   }

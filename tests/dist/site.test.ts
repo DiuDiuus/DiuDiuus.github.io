@@ -114,12 +114,15 @@ describe('pages', () => {
     }
   });
 
-  it('shows projects and experience as closed toggles', () => {
-    expect(count(read('projects/index.html'), '<details')).toBe(5);
-    expect(count(read('index.html'), '<details')).toBe(3);
-    expect(count(read('experience/index.html'), '<details')).toBe(4);
+  it('shows every item fully expanded, with no toggles', () => {
+    expect(count(read('projects/index.html'), '<article class="item"')).toBe(5);
+    expect(count(read('index.html'), '<article class="item"')).toBe(3);
+    expect(count(read('experience/index.html'), '<article class="item"')).toBe(4);
+    expect(decode(read('projects/index.html'))).toContain('Sensitive tabular and time-series data could not be shared freely');
     for (const f of walk(dist).filter((f) => f.endsWith('.html'))) {
-      expect(readFileSync(f, 'utf8'), f).not.toContain('<details open');
+      const html = readFileSync(f, 'utf8');
+      expect(html, f).not.toContain('<details');
+      expect(html, f).not.toContain('class="plus"');
     }
   });
 

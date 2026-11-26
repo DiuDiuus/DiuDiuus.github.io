@@ -18,11 +18,3 @@ const projects = byOrder(await getCollection('projects'));
   {projects.map((entry) => <ProjectItem entry={entry} lang={lang} />)}
 </SiteLayout>
 
-<script>
-  // /projects/#<id> (linked from Experience) opens that project
-  const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
-  if (target instanceof HTMLDetailsElement) {
-    target.open = true;
-    target.scrollIntoView({ block: 'start' });
-  }
-</script>
