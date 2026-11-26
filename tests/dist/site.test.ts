@@ -105,6 +105,27 @@ describe('pages', () => {
     }
   });
 
+  it('splits the Experience page into Experience and Education sections', () => {
+    const docs = yamlFiles('experience');
+    for (const [path, lang, work, edu] of [
+      ['experience/index.html', 'en', 'Experience', 'Education'],
+      ['ko/experience/index.html', 'ko', '경력', '학력'],
+    ] as const) {
+      const page = decode(read(path));
+      const workAt = page.indexOf(`<h2 class="section-title">${work}</h2>`);
+      const eduAt = page.indexOf(`<h2 class="section-title">${edu}</h2>`);
+      expect(workAt, `${path}: ${work} heading`).toBeGreaterThan(-1);
+      expect(eduAt, `${path}: ${edu} heading`).toBeGreaterThan(workAt);
+      for (const d of docs) {
+        const role: string = (lang === 'ko' && d.ko?.role) || d.en.role;
+        const at = page.indexOf(role);
+        expect(at, `${path}: ${role}`).toBeGreaterThan(-1);
+        if (d.kind === 'work') expect(at, `${role} under ${work}`).toBeLessThan(eduAt);
+        else expect(at, `${role} under ${edu}`).toBeGreaterThan(eduAt);
+      }
+    }
+  });
+
   it('links the paper DOI', () => {
     expect(read('research/index.html')).toContain('https://doi.org/10.3390/s24248033');
   });

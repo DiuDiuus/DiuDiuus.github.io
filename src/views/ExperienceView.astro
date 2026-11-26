@@ -1,10 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-import Toggle from '../components/Toggle.astro';
+import ExperienceItem from '../components/ExperienceItem.astro';
 import { t } from '../i18n/ui';
-import { locText, tabPath, type Lang } from '../i18n/utils';
+import { locText, type Lang } from '../i18n/utils';
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { formatPeriod } from '../lib/dates';
 import { byStartDesc } from '../lib/sort';
 
 interface Props {
@@ -12,7 +11,9 @@ interface Props {
 }
 const { lang } = Astro.props;
 const items = byStartDesc(await getCollection('experience'));
-const projects = new Map(
+const work = items.filter((e) => e.data.kind === 'work');
+const education = items.filter((e) => e.data.kind === 'education');
+const projectTitles = new Map(
   (await getCollection('projects')).map((p) => [p.id, locText(p.data.en, p.data.ko, lang).title]),
 );
 ---
@@ -20,36 +21,23 @@ const projects = new Map(
 <SiteLayout lang={lang} tab="experience" title={t(lang, 'experienceTitle')}>
   <h1 class="page-title">{t(lang, 'experienceTitle')}</h1>
   {
-    items.map((entry) => {
-      const d = entry.data;
-      const text = locText(d.en, d.ko, lang);
-      const related = d.projects.filter((id) => projects.has(id));
-      return (
-        <Toggle id={entry.id}>
-          <Fragment slot="summary">
-            <span class="s-title">{text.role}</span>
-            <span class="s-meta">
-              {text.org ?? d.org} · {formatPeriod(d.start, d.end, lang)}
-            </span>
-          </Fragment>
-          {text.detail && <p class="s-lead">{text.detail}</p>}
-          {d.location && <p class="muted">{d.location}</p>}
-          {related.length > 0 && (
-            <>
-              <div class="label">
-                <span>{t(lang, 'related')}</span>
-              </div>
-              <ul class="related">
-                {related.map((id) => (
-                  <li>
-                    <a href={`${tabPath('projects', lang)}#${id}`}>{projects.get(id)}</a>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </Toggle>
-      );
-    })
+    work.length > 0 && (
+      <section>
+        <h2 class="section-title">{t(lang, 'nav.experience')}</h2>
+        {work.map((entry) => (
+          <ExperienceItem entry={entry} lang={lang} projectTitles={projectTitles} />
+        ))}
+      </section>
+    )
+  }
+  {
+    education.length > 0 && (
+      <section>
+        <h2 class="section-title">{t(lang, 'education')}</h2>
+        {education.map((entry) => (
+          <ExperienceItem entry={entry} lang={lang} projectTitles={projectTitles} />
+        ))}
+      </section>
+    )
   }
 </SiteLayout>
