@@ -32,17 +32,19 @@ const en = {
   values: 'What drives me',
   hobbies: 'Hobbies',
   tastes: 'Tastes',
+  work: 'Experience',
   education: 'Education',
 } as const;
 
 export type UiKey = keyof typeof en;
 
 const ko: Record<UiKey, string> = {
-  'nav.about': '소개',
-  'nav.projects': '프로젝트',
-  'nav.research': '연구',
-  'nav.experience': '경력',
-  'nav.beyond': '일 밖의 나',
+  // the menu and page titles stay in English on Korean pages too
+  'nav.about': en['nav.about'],
+  'nav.projects': en['nav.projects'],
+  'nav.research': en['nav.research'],
+  'nav.experience': en['nav.experience'],
+  'nav.beyond': en['nav.beyond'],
   cv: 'CV',
   email: '이메일',
   seeAll: '전체 보기 →',
@@ -60,7 +62,7 @@ const ko: Record<UiKey, string> = {
   where: '소속',
   authors: '저자',
   summary: '요약',
-  experienceTitle: '경력 및 학력',
+  experienceTitle: en.experienceTitle,
   languages: '언어',
   related: '관련 프로젝트',
   notFound: '페이지를 찾을 수 없어요',
@@ -69,6 +71,7 @@ const ko: Record<UiKey, string> = {
   values: '지향',
   hobbies: '취미',
   tastes: '취향',
+  work: '경력',
   education: '학력',
 };
 

@@ -144,6 +144,23 @@ describe('pages', () => {
     }
   });
 
+  it('keeps the menu and page titles in English on Korean pages', () => {
+    const tabs: [string, string][] = [
+      ['ko/index.html', 'About'],
+      ['ko/projects/index.html', 'Projects'],
+      ['ko/research/index.html', 'Research'],
+      ['ko/experience/index.html', 'Experience & Education'],
+      ['ko/beyond/index.html', 'Life & Values'],
+    ];
+    for (const [path, h1] of tabs) {
+      const page = decode(read(path));
+      expect(page, path).toContain(`<h1 class="page-title">${h1}</h1>`);
+      for (const label of ['About', 'Projects', 'Research', 'Experience', 'Life & Values']) {
+        expect(page, `${path} menu: ${label}`).toMatch(new RegExp(`href="/ko/[a-z/]*"[^>]*>\\s*${label}\\s*</a>`));
+      }
+    }
+  });
+
   it('links the paper DOI', () => {
     expect(read('research/index.html')).toContain('https://doi.org/10.3390/s24248033');
   });

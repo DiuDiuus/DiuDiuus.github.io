@@ -40,6 +40,7 @@ describe('paths', () => {
 describe('ui strings', () => {
   it('translates navigation labels', () => {
     expect(t('en', 'nav.projects')).toBe('Projects');
-    expect(t('ko', 'nav.projects')).toBe('프로젝트');
+    expect(t('ko', 'nav.projects')).toBe('Projects'); // menu stays English on Korean pages
+    expect(t('ko', 'skills')).toBe('기술');
   });
 });

@@ -23,7 +23,7 @@ const projectTitles = new Map(
   {
     work.length > 0 && (
       <section>
-        <h2 class="section-title">{t(lang, 'nav.experience')}</h2>
+        <h2 class="section-title">{t(lang, 'work')}</h2>
         {work.map((entry) => (
           <ExperienceItem entry={entry} lang={lang} projectTitles={projectTitles} />
         ))}
