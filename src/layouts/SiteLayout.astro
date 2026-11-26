@@ -1,0 +1,60 @@
+---
+import '@fontsource/instrument-serif/400.css';
+import '@fontsource/instrument-serif/400-italic.css';
+import '@fontsource-variable/inter';
+import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
+import '@fontsource/noto-serif-kr/400.css';
+import '../styles/global.css';
+
+import { getCollection, getEntry } from 'astro:content';
+import MobileHeader from '../components/MobileHeader.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { pick, tabPath, type Lang, type Tab } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  tab: Tab;
+  title: string;
+}
+const { lang, tab, title } = Astro.props;
+
+const profileEntry = await getEntry('profile', 'main');
+if (!profileEntry) throw new Error('src/content/profile.yaml must define `main`');
+const profile = profileEntry.data;
+const hasBeyond = (await getCollection('beyond')).length > 0;
+
+const description = pick(profile.tagline, lang);
+const fullTitle = `${title} — ${pick(profile.name, lang)}`;
+const site = Astro.site ?? new URL('https://jiwookim.dev');
+const url = (path: string) => new URL(path, site).href;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={url(tabPath(tab, lang))} />
+    <link rel="alternate" hreflang="en" href={url(tabPath(tab, 'en'))} />
+    <link rel="alternate" hreflang="ko" href={url(tabPath(tab, 'ko'))} />
+    <link rel="alternate" hreflang="x-default" href={url(tabPath(tab, 'en'))} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url(tabPath(tab, lang))} />
+    <meta property="og:image" content={url('/images/profile.jpg')} />
+    <meta property="og:locale" content={lang === 'ko' ? 'ko_KR' : 'en_US'} />
+  </head>
+  <body>
+    <div class="site">
+      <Sidebar lang={lang} tab={tab} profile={profile} hasBeyond={hasBeyond} />
+      <MobileHeader lang={lang} tab={tab} profile={profile} hasBeyond={hasBeyond} />
+      <main id="main">
+        <div class="main-inner"><slot /></div>
+      </main>
+    </div>
+  </body>
+</html>

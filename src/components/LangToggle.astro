@@ -1,0 +1,15 @@
+---
+import { tabPath, type Lang, type Tab } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  tab: Tab;
+}
+const { lang, tab } = Astro.props;
+---
+
+<span class="lang-toggle">
+  <a href={tabPath(tab, 'en')} hreflang="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+  ·
+  <a href={tabPath(tab, 'ko')} hreflang="ko" aria-current={lang === 'ko' ? 'true' : undefined}>KO</a>
+</span>

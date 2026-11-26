@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pick, type Lang, type Tab } from '../i18n/utils';
+import { encodeEmail } from '../lib/email';
+import EmailLink from './EmailLink.astro';
+import LangToggle from './LangToggle.astro';
+import Nav from './Nav.astro';
+
+interface Props {
+  lang: Lang;
+  tab: Tab;
+  profile: CollectionEntry<'profile'>['data'];
+  hasBeyond: boolean;
+}
+const { lang, tab, profile, hasBeyond } = Astro.props;
+const { github, linkedin, scholar } = profile.links;
+---
+
+<aside class="sidebar">
+  <LangToggle lang={lang} tab={tab} />
+  <img class="photo" src="/images/profile.jpg" width="176" height="176" alt={pick(profile.name, lang)} />
+  {lang === 'ko' && <p class="name-ko">{pick(profile.name, 'ko')}</p>}
+  <p class="name">Jiwoo <i>Kim</i></p>
+  <p class="title">{pick(profile.title, lang)}</p>
+  <p class="affiliation">{pick(profile.affiliation, lang)}</p>
+  <p class="tagline">{pick(profile.tagline, lang)}</p>
+  <div class="buttons">
+    <a class="btn btn-cv" href="/cv/Jiwoo_Kim_CV.pdf" target="_blank" rel="noopener">CV ↓</a>
+    <EmailLink code={encodeEmail(profile.email)} lang={lang} />
+    {github && <a class="btn" href={github} rel="me noopener" target="_blank">GitHub</a>}
+    {linkedin && <a class="btn" href={linkedin} rel="me noopener" target="_blank">LinkedIn</a>}
+    {scholar && <a class="btn" href={scholar} rel="noopener" target="_blank">Scholar</a>}
+  </div>
+  <Nav lang={lang} tab={tab} hasBeyond={hasBeyond} />
+</aside>

@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pick, type Lang, type Tab } from '../i18n/utils';
+import { encodeEmail } from '../lib/email';
+import EmailLink from './EmailLink.astro';
+import LangToggle from './LangToggle.astro';
+import Nav from './Nav.astro';
+
+interface Props {
+  lang: Lang;
+  tab: Tab;
+  profile: CollectionEntry<'profile'>['data'];
+  hasBeyond: boolean;
+}
+const { lang, tab, profile, hasBeyond } = Astro.props;
+---
+
+<header class="mobile-header">
+  <div class="mh-top">
+    <img class="mh-photo" src="/images/profile.jpg" width="56" height="56" alt="" />
+    <div class="mh-id">
+      <p class="name">Jiwoo <i>Kim</i></p>
+      <p class="title">{pick(profile.title, lang)}</p>
+    </div>
+    <LangToggle lang={lang} tab={tab} />
+  </div>
+  <div class="buttons">
+    <a class="btn btn-cv" href="/cv/Jiwoo_Kim_CV.pdf" target="_blank" rel="noopener">CV ↓</a>
+    <EmailLink code={encodeEmail(profile.email)} lang={lang} />
+  </div>
+  <Nav lang={lang} tab={tab} hasBeyond={hasBeyond} />
+</header>

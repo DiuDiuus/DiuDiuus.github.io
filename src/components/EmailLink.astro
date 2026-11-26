@@ -1,0 +1,22 @@
+---
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/utils';
+
+interface Props {
+  code: string;
+  lang: Lang;
+}
+const { code, lang } = Astro.props;
+---
+
+<a class="btn email-link" data-e={code} href="#" hidden>{t(lang, 'email')}</a>
+<noscript><a class="btn" href="/cv/Jiwoo_Kim_CV.pdf">{t(lang, 'emailFallback')}</a></noscript>
+
+<script>
+  import { decodeEmail } from '../lib/email';
+
+  document.querySelectorAll<HTMLAnchorElement>('a[data-e]').forEach((a) => {
+    a.href = `mailto:${decodeEmail(a.dataset.e ?? '')}`;
+    a.hidden = false;
+  });
+</script>

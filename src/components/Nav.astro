@@ -1,0 +1,26 @@
+---
+import { t } from '../i18n/ui';
+import { TABS, tabPath, type Lang, type Tab } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  tab: Tab;
+  hasBeyond: boolean;
+}
+const { lang, tab, hasBeyond } = Astro.props;
+const tabs = TABS.filter((name) => name !== 'beyond' || hasBeyond);
+---
+
+<nav class="nav" aria-label={lang === 'ko' ? '메뉴' : 'Main'}>
+  <ul>
+    {
+      tabs.map((name) => (
+        <li>
+          <a href={tabPath(name, lang)} aria-current={name === tab ? 'page' : undefined}>
+            {t(lang, `nav.${name}`)}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
