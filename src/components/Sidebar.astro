@@ -20,7 +20,7 @@ const { github, linkedin, scholar } = profile.links;
   <LangToggle lang={lang} tab={tab} />
   <img class="photo" src="/images/profile.jpg" width="176" height="176" alt={pick(profile.name, lang)} />
   {lang === 'ko' && <p class="name-ko">{pick(profile.name, 'ko')}</p>}
-  <p class="name">Jiwoo <i>Kim</i></p>
+  <p class="name">Jiwoo <span class="name-accent">Kim</span></p>
   <p class="title">{pick(profile.title, lang)}</p>
   <p class="affiliation">{pick(profile.affiliation, lang)}</p>
   <p class="tagline">{pick(profile.tagline, lang)}</p>

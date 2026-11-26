@@ -24,6 +24,24 @@ describe('sidebar and layout', () => {
     expect(home).toContain('href="/cv/Jiwoo_Kim_CV.pdf"');
   });
 
+  it('uses the chosen typefaces and an upright "Kim"', () => {
+    const css = walk(dist)
+      .filter((f) => f.endsWith('.css'))
+      .map((f) => readFileSync(f, 'utf8'))
+      .join('\n');
+    for (const family of ['Fraunces Variable', 'DM Sans Variable', 'Gowun Batang', 'Pretendard Variable']) {
+      expect(css, family).toContain(family);
+    }
+    for (const old of ['Instrument Serif', 'Inter Variable', 'Noto Serif KR']) {
+      expect(css, old).not.toContain(old);
+    }
+    for (const page of ['index.html', 'ko/index.html']) {
+      const html = read(page);
+      expect(html, page).not.toContain('<i>Kim</i>');
+      expect(html, page).toContain('<span class="name-accent">Kim</span>');
+    }
+  });
+
   it('ships the public CV', () => {
     expect(existsSync(join(dist, 'cv/Jiwoo_Kim_CV.pdf'))).toBe(true);
   });

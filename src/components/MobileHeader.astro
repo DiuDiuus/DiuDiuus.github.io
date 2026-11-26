@@ -19,7 +19,7 @@ const { lang, tab, profile, hasBeyond } = Astro.props;
   <div class="mh-top">
     <img class="mh-photo" src="/images/profile.jpg" width="56" height="56" alt="" />
     <div class="mh-id">
-      <p class="name">Jiwoo <i>Kim</i></p>
+      <p class="name">Jiwoo <span class="name-accent">Kim</span></p>
       <p class="title">{pick(profile.title, lang)}</p>
     </div>
     <LangToggle lang={lang} tab={tab} />
