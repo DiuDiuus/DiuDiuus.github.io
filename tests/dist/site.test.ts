@@ -144,6 +144,16 @@ describe('pages', () => {
     }
   });
 
+  it('keeps the value keywords in English on the Korean page', () => {
+    const page = decode(read('ko/beyond/index.html'));
+    for (const word of ['Depth', 'Breadth', 'Curiosity', 'Communication']) {
+      expect(page).toMatch(new RegExp(`<span class="value-title">\\s*${word}\\s*</span>`));
+    }
+    for (const word of ['깊이', '확장', '호기심', '소통']) {
+      expect(page).not.toMatch(new RegExp(`<span class="value-title">\\s*${word}\\s*</span>`));
+    }
+  });
+
   it('keeps the menu and page titles in English on Korean pages', () => {
     const tabs: [string, string][] = [
       ['ko/index.html', 'About'],
