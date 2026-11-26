@@ -195,10 +195,10 @@ h1.page-title {
 .item .label { margin-top: 12px; }
 .related li { padding: 2px 0; }
 .related li::before { content: '→ '; color: var(--muted); }
-.values { display: grid; gap: 10px; }
+.values { display: grid; gap: 14px; }
 .values li { display: flex; flex-direction: column; padding-left: 16px; border-left: 2px solid var(--rose); }
 .value-title { font-family: var(--font-display); font-weight: 500; font-size: 23px; line-height: 1.25; }
-.value-detail { font-size: 13.5px; color: var(--muted); }
+.value-detail { font-size: 15px; color: var(--fg); opacity: 0.85; margin-top: 2px; }
 .tastes { display: grid; grid-template-columns: 120px 1fr; gap: 8px 16px; margin: 0; }
 .tastes dt { color: var(--muted); font-size: 13px; }
 .tastes dd { margin: 0; }
