@@ -29,6 +29,10 @@ const en = {
   notFound: 'Page not found',
   backHome: 'Back to home',
   emailFallback: 'Email address is in the CV',
+  values: 'What drives me',
+  hobbies: 'Hobbies',
+  tastes: 'Tastes',
+  education: 'Education',
 } as const;
 
 export type UiKey = keyof typeof en;
@@ -62,6 +66,10 @@ const ko: Record<UiKey, string> = {
   notFound: '페이지를 찾을 수 없어요',
   backHome: '처음으로',
   emailFallback: '이메일 주소는 CV에 있어요',
+  values: '지향',
+  hobbies: '취미',
+  tastes: '취향',
+  education: '학력',
 };
 
 export const ui: Record<Lang, Record<UiKey, string>> = { en, ko };

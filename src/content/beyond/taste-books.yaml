@@ -1,0 +1,8 @@
+kind: taste
+order: 2
+en:
+  title: Books
+  detail: Economics, philosophy, psychology
+ko:
+  title: 책
+  detail: 경제·철학·심리 서적

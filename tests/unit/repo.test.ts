@@ -1,5 +1,5 @@
 import { execFileSync, spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { parse } from 'yaml';
@@ -11,7 +11,7 @@ describe('public repository hygiene', () => {
   it('tracks no file that contains a Korean mobile number or its prefix', () => {
     const files = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' })
       .split('\n')
-      .filter((f) => f && !/\.(pdf|jpe?g|png|woff2?|svg)$/.test(f))
+      .filter((f) => f && existsSync(join(root, f)) && !/\.(pdf|jpe?g|png|woff2?|svg)$/.test(f))
       // the helper's own test uses fictional 1234-5678 numbers on purpose
       .filter((f) => f !== 'tests/unit/phone-helper.test.ts');
     for (const f of files) {

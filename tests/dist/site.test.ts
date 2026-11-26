@@ -66,12 +66,33 @@ describe('pages', () => {
     expect(existsSync(join(dist, '404.html'))).toBe(true);
   });
 
-  it('hides Beyond Work while it has no content', () => {
-    expect(yamlFiles('beyond')).toHaveLength(0);
-    expect(existsSync(join(dist, 'beyond'))).toBe(false);
-    expect(existsSync(join(dist, 'ko/beyond'))).toBe(false);
-    for (const f of walk(dist).filter((f) => f.endsWith('.html'))) {
-      expect(readFileSync(f, 'utf8'), f).not.toMatch(/href="(\/ko)?\/beyond\/"/);
+  it('shows Beyond Work exactly when it has content', () => {
+    const hasContent = yamlFiles('beyond').length > 0;
+    expect(existsSync(join(dist, 'beyond/index.html'))).toBe(hasContent);
+    expect(existsSync(join(dist, 'ko/beyond/index.html'))).toBe(hasContent);
+    if (hasContent) {
+      expect(read('index.html')).toContain('href="/beyond/"');
+      expect(read('ko/index.html')).toContain('href="/ko/beyond/"');
+    } else {
+      for (const f of walk(dist).filter((f) => f.endsWith('.html'))) {
+        expect(readFileSync(f, 'utf8'), f).not.toMatch(/href="(\/ko)?\/beyond\/"/);
+      }
+    }
+  });
+
+  it('lays out Beyond Work without toggles: values, hobbies, tastes', () => {
+    const docs = yamlFiles('beyond');
+    expect(docs.filter((d) => d.kind === 'value')).toHaveLength(4);
+    expect(docs.filter((d) => d.kind === 'hobby')).toHaveLength(3);
+    expect(docs.filter((d) => d.kind === 'taste')).toHaveLength(4);
+    for (const [path, lang] of [['beyond/index.html', 'en'], ['ko/beyond/index.html', 'ko']] as const) {
+      const page = decode(read(path));
+      expect(page, path).not.toContain('<details');
+      for (const d of docs) {
+        const text = { ...d.en, ...(lang === 'ko' ? d.ko : {}) };
+        expect(page, `${path}: ${text.title}`).toContain(text.title);
+        if (text.detail) expect(page, `${path}: ${text.detail}`).toContain(text.detail);
+      }
     }
   });
 
@@ -98,6 +119,7 @@ describe('pages', () => {
       projects: decode(read('ko/projects/index.html')),
       research: decode(read('ko/research/index.html')),
       experience: decode(read('ko/experience/index.html')),
+      ...(existsSync(join(dist, 'ko/beyond/index.html')) ? { beyond: decode(read('ko/beyond/index.html')) } : {}),
     };
     for (const [dir, page] of Object.entries(pages)) {
       for (const doc of yamlFiles(dir)) {
