@@ -77,7 +77,7 @@ const url = (path: string) => new URL(path, site).href;
             io.unobserve(e.target);
           }
         });
-        const targets = '.item, .values li, .tastes, .section-title, main .label, main .chips, main .facts';
+        const targets = '.item, .featured-row, .values li, .tastes, .hobbies li, .section-title, main .label, main .chips, main .facts';
         for (const el of document.querySelectorAll(targets)) {
           if (el.parentElement.closest(targets)) continue; // e.g. tags inside a card rise with the card
           el.classList.add('reveal');

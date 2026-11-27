@@ -104,7 +104,7 @@ describe('sidebar and layout', () => {
       const js = script![1];
       expect(js).toMatch(/['"]IntersectionObserver['"]\s*in\s*window/);
       expect(js).toMatch(/prefers-reduced-motion:\s*reduce/);
-      for (const target of ['.item', '.values li', '.tastes', '.section-title', 'main .label', 'main .chips', 'main .facts']) {
+      for (const target of ['.item', '.featured-row', '.values li', '.tastes', '.hobbies li', '.section-title', 'main .label', 'main .chips', 'main .facts']) {
         expect(js, target).toContain(target);
       }
       // staggered like the mockup (70ms steps, capped) and each element revealed once
@@ -118,6 +118,8 @@ describe('sidebar and layout', () => {
   it('keeps the phone tab row swipeable without a scrollbar band', () => {
     const css = allCss();
     expect(phoneCss(css)).toMatch(/\.site-header \.nav\{[^}]*scrollbar-width:none/);
+    // the scrolling tab row clips anything below its box, so the current-tab underline sits inside it
+    expect(phoneCss(css)).toMatch(/\.site-header \.nav-indicator\{[^}]*bottom:0/);
     expect(css).not.toContain('mobile-header');
   });
 
@@ -196,6 +198,13 @@ describe('header and footer', () => {
     }
   });
 
+  it('keeps the footer at the bottom of short pages', () => {
+    const css = allCss();
+    expect(css).toMatch(/body\{[^}]*min-height:100dvh/);
+    expect(css).toMatch(/body\{[^}]*flex-direction:column/);
+    expect(css).toMatch(/main\{[^}]*flex:1/);
+  });
+
   it('uses the paper palette and readable greys', () => {
     const css = allCss();
     expect(css).toMatch(/--bg:#f7f4ef/i);
@@ -239,6 +248,10 @@ describe('About', () => {
       expect([...at].sort((a, b) => a - b), page).toEqual(at);
       expect(facts, page).toContain(focus);
     }
+  });
+
+  it('lines the four facts up in two equal columns on phones', () => {
+    expect(phoneCss(allCss())).toMatch(/\.facts\{[^}]*grid-template-columns:repeat\(2,\s*minmax\(0(px)?,\s*1fr\)\)/);
   });
 
   it('lists three featured projects that link into the Projects page', () => {
