@@ -208,11 +208,12 @@ h1.page-title {
 /* ---------- Page transitions (cross-document View Transitions; no JS) ---------- */
 @view-transition { navigation: auto; }
 .mobile-header { view-transition-name: mobile-header; }
-::view-transition-old(root) { animation: 160ms ease-in both vt-fade-out; }
-::view-transition-new(root) { animation: 260ms ease-out both vt-fade-in; }
-::view-transition-group(nav-indicator) { animation-duration: 320ms; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-@keyframes vt-fade-out { to { opacity: 0; } }
-@keyframes vt-fade-in { from { opacity: 0; transform: translateY(8px); } }
+/* old page drifts left and fades; new page glides in from the right; the menu marker glides with a soft overshoot */
+::view-transition-old(root) { animation: 240ms cubic-bezier(0.4, 0, 1, 1) both vt-out; }
+::view-transition-new(root) { animation: 520ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both vt-in; }
+::view-transition-group(nav-indicator) { animation-duration: 480ms; animation-timing-function: cubic-bezier(0.34, 1.4, 0.64, 1); }
+@keyframes vt-out { to { opacity: 0; transform: translateX(-24px); } }
+@keyframes vt-in { from { opacity: 0; transform: translateX(48px); } }
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
 }

@@ -51,6 +51,15 @@ describe('sidebar and layout', () => {
     expect(css).toMatch(/@media \(prefers-reduced-motion:reduce\)\{@view-transition\{navigation:none\}/);
     expect(css).toMatch(/\.sidebar\{[^}]*view-transition-name:sidebar/);
     expect(css).toMatch(/\.nav-indicator\{[^}]*view-transition-name:nav-indicator/);
+    // noticeable: the new page slides in for at least 0.4s, and the menu marker glides for at least 0.4s
+    // durations may be minified to seconds (".52s") or kept in ms
+    const ms = (re: RegExp) => {
+      const m = css.match(re);
+      return m ? Number(m[1]) * (m[2] === 's' ? 1000 : 1) : 0;
+    };
+    expect(ms(/::view-transition-new\(root\)\{animation:([\d.]+)(ms|s)/)).toBeGreaterThanOrEqual(400);
+    expect(ms(/::view-transition-group\(nav-indicator\)\{animation-duration:([\d.]+)(ms|s)/)).toBeGreaterThanOrEqual(400);
+    expect(css).toMatch(/@keyframes vt-in\{(0%|from)\{[^}]*translateX?\(\d+px/);
     for (const page of ['index.html', 'projects/index.html', 'ko/beyond/index.html']) {
       const html = read(page);
       // one indicator per menu (sidebar + mobile header), inside the current tab's link only
