@@ -68,6 +68,22 @@ describe('sidebar and layout', () => {
     }
   });
 
+  it('reveals content on scroll without ever hiding it from browsers that cannot animate it', () => {
+    const css = walk(dist)
+      .filter((f) => f.endsWith('.css'))
+      .map((f) => readFileSync(f, 'utf8'))
+      .join('\n');
+    // scroll-driven, only where supported and only when the visitor allows motion
+    const block = css.match(/@supports \(animation-timeline:view\(\)\)\{@media \(prefers-reduced-motion:no-preference\)\{([\s\S]*?)\}\}\}/);
+    expect(block, 'guarded scroll-reveal block').not.toBeNull();
+    // the minifier may fold animation-timeline into the animation shorthand
+    expect(block![1]).toMatch(/\.item[^{]*\{[^}]*(animation-timeline:view\(\)|animation:[^;}]*view\(\))/);
+    expect(css).toMatch(/@keyframes scroll-reveal\{(0%|from)\{[^}]*opacity:0/);
+    // outside the guarded block nothing starts invisible
+    const outside = css.replace(block![0], '');
+    expect(outside).not.toMatch(/\.item\{[^}]*opacity:0/);
+  });
+
   it('loads GoatCounter only when a site code is configured', () => {
     const profile = parse(readFileSync(join(contentDir, 'profile.yaml'), 'utf8')).main;
     const code: string = profile.analytics?.goatcounter ?? '';

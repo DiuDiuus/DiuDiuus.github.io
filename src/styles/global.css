@@ -217,3 +217,17 @@ h1.page-title {
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
 }
+
+/* ---------- Scroll reveal (scroll-driven; content is never hidden where unsupported) ---------- */
+@keyframes scroll-reveal {
+  from { opacity: 0; transform: translateY(28px); }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .item, .values li, .tastes, .section-title, main .label, main .chips, main .facts {
+      animation: scroll-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 80%;
+    }
+  }
+}
