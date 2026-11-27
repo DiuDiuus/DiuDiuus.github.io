@@ -91,6 +91,15 @@ describe('analytics setting', () => {
   });
 });
 
+describe('research focus', () => {
+  const profile = () => parse(readFileSync(join(root, 'profile.yaml'), 'utf8')).main;
+  it('requires a short research focus on the profile', () => {
+    const { focus, ...profileWithoutFocus } = profile();
+    expect(profileSchema.safeParse(profileWithoutFocus).success).toBe(false);
+    expect(profileSchema.parse(profile()).focus.en).toBe('Graph anomaly detection');
+  });
+});
+
 describe('CV-derived content', () => {
   it('uses the CV project names as titles', () => {
     const cvTitles = [

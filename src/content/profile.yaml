@@ -23,6 +23,9 @@ main:
   basedIn:
     en: Seoul
     ko: 서울
+  focus:
+    en: Graph anomaly detection
+    ko: 그래프 이상탐지
   currentResearch:
     en: "My doctoral research focuses on graph anomaly detection."
     ko: "박사과정에서는 그래프 이상탐지를 중심으로 연구하고 있습니다."

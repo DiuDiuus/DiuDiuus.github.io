@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { langFromPath, locText, switchLangPath, tabPath } from '../../src/i18n/utils';
-import { t } from '../../src/i18n/ui';
+import { countLabel, t } from '../../src/i18n/ui';
 
 describe('locText', () => {
   it('returns English when Korean is missing', () => {
@@ -42,5 +42,13 @@ describe('ui strings', () => {
     expect(t('en', 'nav.projects')).toBe('Projects');
     expect(t('ko', 'nav.projects')).toBe('Projects'); // menu stays English on Korean pages
     expect(t('ko', 'skills')).toBe('기술');
+  });
+});
+
+describe('new labels', () => {
+  it('counts projects in each language', () => {
+    expect(countLabel('en', 5)).toBe('5 projects');
+    expect(countLabel('ko', 5)).toBe('프로젝트 5개');
+    expect(t('ko', 'focus')).toBe('연구');
   });
 });

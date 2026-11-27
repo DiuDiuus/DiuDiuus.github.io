@@ -71,6 +71,7 @@ export const profileSchema = z.object({
   now: localized,
   next: localized,
   basedIn: localized,
+  focus: localized,
   currentResearch: localized,
   languages: localized,
   skills: z.array(z.string()).min(1),

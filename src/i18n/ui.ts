@@ -34,6 +34,9 @@ const en = {
   tastes: 'Tastes',
   work: 'Experience',
   education: 'Education',
+  focus: 'Research',
+  projectsSub: 'Data and AI systems built in industry, 2021–2025.',
+  projectCount: '{n} projects',
 } as const;
 
 export type UiKey = keyof typeof en;
@@ -73,10 +76,18 @@ const ko: Record<UiKey, string> = {
   tastes: '취향',
   work: '경력',
   education: '학력',
+  focus: '연구',
+  projectsSub: '산업 현장에서 만든 데이터·AI 시스템, 2021–2025.',
+  projectCount: '프로젝트 {n}개',
 };
 
 export const ui: Record<Lang, Record<UiKey, string>> = { en, ko };
 
 export function t(lang: Lang, key: UiKey): string {
   return ui[lang][key];
+}
+
+/** "5 projects" / "프로젝트 5개" — built from the real count so it stays right when items are added. */
+export function countLabel(lang: Lang, n: number): string {
+  return t(lang, 'projectCount').replace('{n}', String(n));
 }
