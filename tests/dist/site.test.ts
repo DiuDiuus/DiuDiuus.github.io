@@ -20,8 +20,18 @@ const allCss = () =>
     .filter((f) => f.endsWith('.css'))
     .map((f) => readFileSync(f, 'utf8'))
     .join('\n');
-const phoneCss = (css: string) =>
-  (css.match(/@media \((?:max-width:767px|width<=767px)\)\{([\s\S]*?)\}\s*(?=@|$)/g) ?? []).join('\n');
+/** The bodies of the phone media blocks only (brace-counted, so later desktop rules never leak in). */
+const phoneCss = (css: string) => {
+  const out: string[] = [];
+  const open = /@media \((?:max-width:767px|width<=767px)\)\{/g;
+  for (let m = open.exec(css); m; m = open.exec(css)) {
+    let depth = 1;
+    let i = open.lastIndex;
+    for (; i < css.length && depth > 0; i++) depth += css[i] === '{' ? 1 : css[i] === '}' ? -1 : 0;
+    out.push(css.slice(open.lastIndex, i - 1));
+  }
+  return out.join('\n');
+};
 
 describe('sidebar and layout', () => {
   it('renders the English home page with the CV link', () => {
@@ -205,6 +215,26 @@ describe('header and footer', () => {
     expect(css).toMatch(/main\{[^}]*flex:1/);
   });
 
+  it('keeps keyboard focus and anchor jumps clear of the sticky header', () => {
+    expect(allCss()).toMatch(/html\{[^}]*scroll-padding-top:calc\(var\(--header-h\)\s*\+\s*8px\)/);
+  });
+
+  it('draws a focus ring that stands out on the paper background', () => {
+    expect(allCss()).toMatch(/:focus-visible\{[^}]*outline:[^;}]*var\(--fg\)/);
+  });
+
+  it('brings the current tab into view on phones and keeps its focus ring inside the tab row', () => {
+    for (const page of ['beyond/index.html', 'ko/experience/index.html']) {
+      const html = read(page);
+      const at = html.indexOf('<header class="site-header"');
+      const header = html.slice(at, html.indexOf('</header>', at));
+      const script = (header.match(/<script>([\s\S]*?)<\/script>/) ?? [])[1] ?? '';
+      expect(script, page).toContain('aria-current');
+      expect(script, page).toContain('scrollLeft');
+    }
+    expect(phoneCss(allCss())).toMatch(/\.site-header \.nav a[^{]*\{[^}]*outline-offset:-/);
+  });
+
   it('uses the paper palette and readable greys', () => {
     const css = allCss();
     expect(css).toMatch(/--bg:#f7f4ef/i);
@@ -254,6 +284,14 @@ describe('About', () => {
     expect(phoneCss(allCss())).toMatch(/\.facts\{[^}]*grid-template-columns:repeat\(2,\s*minmax\(0(px)?,\s*1fr\)\)/);
   });
 
+  it('lets the phone facts grid win over the base facts rule', () => {
+    const css = allCss();
+    const base = css.search(/\.facts\{[^}]*display:flex/);
+    const phone = css.search(/\.facts\{[^}]*grid-template-columns:repeat\(2/);
+    expect(base).toBeGreaterThan(-1);
+    expect(phone, 'phone .facts must come after the base rule').toBeGreaterThan(base);
+  });
+
   it('lists three featured projects that link into the Projects page', () => {
     for (const [page, base] of [['index.html', '/projects/'], ['ko/index.html', '/ko/projects/']] as const) {
       const html = read(page);
@@ -299,6 +337,13 @@ describe('item pages', () => {
 });
 
 describe('Life & Values', () => {
+  it('fits the values on narrow phones without sideways scrolling', () => {
+    const css = allCss();
+    expect(phoneCss(css)).toMatch(/\.values\{[^}]*grid-template-columns:repeat\(2,\s*minmax\(0(px)?,\s*1fr\)\)/);
+    expect(css).toMatch(/@media \((?:max-width:360px|width<=360px)\)\{[^@]*\.values\{[^}]*grid-template-columns:1fr/);
+    expect(css).toMatch(/\.value-title\{[^}]*overflow-wrap:anywhere/);
+  });
+
   it('sets the four values side by side and lists hobbies as rows, not chips', () => {
     const css = allCss();
     expect(css).toMatch(/\.values\{[^}]*grid-template-columns:repeat\(4,\s*1fr\)/);

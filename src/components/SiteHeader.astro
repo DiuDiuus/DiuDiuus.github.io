@@ -18,4 +18,14 @@ const { lang, tab, hasBeyond } = Astro.props;
     <LangToggle lang={lang} tab={tab} />
     <a class="btn btn-cv" href="/cv/Jiwoo_Kim_CV.pdf" target="_blank" rel="noopener">CV ↓</a>
   </div>
+  <script is:inline>
+    // Phones: the tab row scrolls sideways, so bring the current tab into view before first paint.
+    (() => {
+      const row = document.querySelector('.site-header .nav');
+      const current = row && row.querySelector('[aria-current="page"]');
+      if (!current || row.scrollWidth <= row.clientWidth) return;
+      const over = current.getBoundingClientRect().right - row.getBoundingClientRect().right;
+      if (over > 0) row.scrollLeft += over + 18;
+    })();
+  </script>
 </header>
