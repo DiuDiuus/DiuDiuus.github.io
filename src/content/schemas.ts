@@ -81,4 +81,8 @@ export const profileSchema = z.object({
     linkedin: z.preprocess((v) => v ?? '', z.string()),
     scholar: z.preprocess((v) => v ?? '', z.string()),
   }),
+  /** GoatCounter site code (the part before .goatcounter.com); empty = no analytics. */
+  analytics: z
+    .object({ goatcounter: z.preprocess((v) => v ?? '', z.string().regex(/^[a-z0-9-]*$/, 'letters, digits, hyphens')) })
+    .default({ goatcounter: '' }),
 });

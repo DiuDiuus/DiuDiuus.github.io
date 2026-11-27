@@ -47,6 +47,16 @@ const url = (path: string) => new URL(path, site).href;
     <meta property="og:url" content={url(tabPath(tab, lang))} />
     <meta property="og:image" content={url('/images/profile.jpg')} />
     <meta property="og:locale" content={lang === 'ko' ? 'ko_KR' : 'en_US'} />
+    {
+      profile.analytics.goatcounter && (
+        <script
+          is:inline
+          data-goatcounter={`https://${profile.analytics.goatcounter}.goatcounter.com/count`}
+          async
+          src="//gc.zgo.at/count.js"
+        />
+      )
+    }
   </head>
   <body>
     <div class="site">

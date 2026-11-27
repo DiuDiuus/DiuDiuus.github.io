@@ -42,6 +42,37 @@ describe('sidebar and layout', () => {
     }
   });
 
+  it('animates page changes with view transitions, except for reduced motion', () => {
+    const css = walk(dist)
+      .filter((f) => f.endsWith('.css'))
+      .map((f) => readFileSync(f, 'utf8'))
+      .join('\n');
+    expect(css).toMatch(/@view-transition\{navigation:auto\}/);
+    expect(css).toMatch(/@media \(prefers-reduced-motion:reduce\)\{@view-transition\{navigation:none\}/);
+    expect(css).toMatch(/\.sidebar\{[^}]*view-transition-name:sidebar/);
+    expect(css).toMatch(/\.nav-indicator\{[^}]*view-transition-name:nav-indicator/);
+    for (const page of ['index.html', 'projects/index.html', 'ko/beyond/index.html']) {
+      const html = read(page);
+      // one indicator per menu (sidebar + mobile header), inside the current tab's link only
+      expect(count(html, 'class="nav-indicator"'), page).toBe(2);
+      expect(html, page).toMatch(/aria-current="page"[^>]*>[^<]*<span class="nav-indicator"/);
+    }
+  });
+
+  it('loads GoatCounter only when a site code is configured', () => {
+    const profile = parse(readFileSync(join(contentDir, 'profile.yaml'), 'utf8')).main;
+    const code: string = profile.analytics?.goatcounter ?? '';
+    for (const page of ['index.html', 'ko/projects/index.html', '404.html']) {
+      const html = read(page);
+      if (code) {
+        expect(html, page).toContain(`data-goatcounter="https://${code}.goatcounter.com/count"`);
+        expect(html, page).toContain('src="//gc.zgo.at/count.js"');
+      } else {
+        expect(html, page).not.toContain('goatcounter');
+      }
+    }
+  });
+
   it('ships the public CV', () => {
     expect(existsSync(join(dist, 'cv/Jiwoo_Kim_CV.pdf'))).toBe(true);
   });
@@ -169,7 +200,7 @@ describe('pages', () => {
       const page = decode(read(path));
       expect(page, path).toContain(`<h1 class="page-title">${h1}</h1>`);
       for (const label of ['About', 'Projects', 'Research', 'Experience', 'Life & Values']) {
-        expect(page, `${path} menu: ${label}`).toMatch(new RegExp(`href="/ko/[a-z/]*"[^>]*>\\s*${label}\\s*</a>`));
+        expect(page, `${path} menu: ${label}`).toMatch(new RegExp(`href="/ko/[a-z/]*"[^>]*>\\s*${label}\\s*(<span class="nav-indicator"[^>]*></span>\\s*)?</a>`));
       }
     }
   });

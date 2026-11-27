@@ -46,6 +46,12 @@ ko:
 
 Life & Values(`src/content/beyond/`) 항목의 `kind`는 세 가지예요. `value`(지향)는 핵심어와 한 줄 설명으로, `hobby`(취미)는 태그로, `taste`(취향)는 "항목: 내용" 한 줄로 보여요.
 
+## 방문자 통계 켜기 (GoatCounter)
+
+1. https://www.goatcounter.com 에서 무료로 가입하고, 사이트 코드(예: `jiwookim` → `jiwookim.goatcounter.com`)를 정해요.
+2. `src/content/profile.yaml`의 `analytics.goatcounter`에 그 코드를 넣고 올리면 모든 페이지에서 집계가 시작돼요. 비워두면 꺼져요.
+3. 통계는 `https://<코드>.goatcounter.com` 대시보드에서 봐요. 쿠키를 쓰지 않아 동의 배너가 필요 없어요.
+
 ## 사진·CV 바꾸기
 
 - **사진:** 새 사진을 긴 변 800px 이하로 줄여 `public/images/profile.jpg`로 저장한 뒤, 위치 정보 같은 메타데이터를 지워요. 사진이 회전 정보에 의존하면(휴대폰 세로 사진에 흔함) 스크립트가 멈추고 안내해요. 그럴 땐 미리보기 앱에서 회전해 다시 저장한 뒤 실행하세요.

@@ -77,6 +77,20 @@ describe('blank fields written by hand', () => {
   });
 });
 
+describe('analytics setting', () => {
+  const profile = () => parse(readFileSync(join(root, 'profile.yaml'), 'utf8')).main;
+  it('defaults to no analytics', () => {
+    const { analytics, ...rest } = profile();
+    expect(profileSchema.parse(rest).analytics.goatcounter).toBe('');
+  });
+  it('accepts a GoatCounter site code', () => {
+    expect(profileSchema.parse({ ...profile(), analytics: { goatcounter: 'jiwoo-kim' } }).analytics.goatcounter).toBe('jiwoo-kim');
+  });
+  it('rejects codes that could break the script URL', () => {
+    expect(profileSchema.safeParse({ ...profile(), analytics: { goatcounter: 'x.evil.com/"' } }).success).toBe(false);
+  });
+});
+
 describe('CV-derived content', () => {
   it('uses the CV project names as titles', () => {
     const cvTitles = [

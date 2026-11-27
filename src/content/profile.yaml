@@ -51,3 +51,5 @@ main:
     github: ""
     linkedin: ""
     scholar: ""
+  analytics:
+    goatcounter: ""   # GoatCounter site code, e.g. "jiwookim" for jiwookim.goatcounter.com
