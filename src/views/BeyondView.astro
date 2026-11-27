@@ -38,34 +38,36 @@ const tastes = all.filter((e) => e.kind === 'taste');
     )
   }
   {
-    hobbies.length > 0 && (
-      <section>
-        <div class="label">
-          <span>{t(lang, 'hobbies')}</span>
-        </div>
-        <div class="chips">
-          {hobbies.map((h) => (
-            <span class="chip">{h.title}</span>
-          ))}
-        </div>
-      </section>
-    )
-  }
-  {
-    tastes.length > 0 && (
-      <section>
-        <div class="label">
-          <span>{t(lang, 'tastes')}</span>
-        </div>
-        <dl class="tastes">
-          {tastes.map((x) => (
-            <>
-              <dt>{x.title}</dt>
-              <dd>{x.detail}</dd>
-            </>
-          ))}
-        </dl>
-      </section>
+    (hobbies.length > 0 || tastes.length > 0) && (
+      <div class="beyond-cols">
+        {hobbies.length > 0 && (
+          <section>
+            <div class="label">
+              <span>{t(lang, 'hobbies')}</span>
+            </div>
+            <ul class="hobbies">
+              {hobbies.map((h) => (
+                <li>{h.title}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+        {tastes.length > 0 && (
+          <section>
+            <div class="label">
+              <span>{t(lang, 'tastes')}</span>
+            </div>
+            <dl class="tastes">
+              {tastes.map((x) => (
+                <>
+                  <dt>{x.title}</dt>
+                  <dd>{x.detail}</dd>
+                </>
+              ))}
+            </dl>
+          </section>
+        )}
+      </div>
     )
   }
 </SiteLayout>

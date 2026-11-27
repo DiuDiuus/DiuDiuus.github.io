@@ -285,6 +285,21 @@ describe('item pages', () => {
   });
 });
 
+describe('Life & Values', () => {
+  it('sets the four values side by side and lists hobbies as rows, not chips', () => {
+    const css = allCss();
+    expect(css).toMatch(/\.values\{[^}]*grid-template-columns:repeat\(4,\s*1fr\)/);
+    expect(css).toMatch(/\.value-title:{1,2}after\{[^}]*content:"\."/);
+    for (const page of ['beyond/index.html', 'ko/beyond/index.html']) {
+      const html = read(page);
+      expect(html, page).toContain('<ul class="hobbies">');
+      expect(html, page).toContain('<div class="beyond-cols">');
+      expect(html, page).not.toContain('class="chip"');
+      expect(html, page).not.toMatch(/>\s*0[1-9]\s*</);
+    }
+  });
+});
+
 describe('pages', () => {
   it.each(['', 'projects/', 'research/', 'experience/'])('builds /%s in English and Korean', (p) => {
     expect(read(`${p}index.html`)).toContain('<html lang="en"');

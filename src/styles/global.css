@@ -231,14 +231,28 @@ h1.page-title {
 }
 .related li { padding: 2px 0; }
 .related li::before { content: '→ '; color: var(--muted); }
-.values { display: grid; gap: 14px; }
-.values li { display: flex; flex-direction: column; padding-left: 16px; border-left: 2px solid var(--rose); }
-.value-title { font-family: var(--font-display); font-weight: 500; font-size: 23px; line-height: 1.25; }
-.value-detail { font-size: 15px; color: var(--fg); opacity: 0.85; margin-top: 2px; }
-.tastes { display: grid; grid-template-columns: 120px 1fr; gap: 8px 16px; margin: 0; }
-.tastes dt { color: var(--muted); font-size: 13px; }
-.tastes dd { margin: 0; }
-@media (max-width: 767px) { .tastes { grid-template-columns: 96px 1fr; } .value-title { font-size: 21px; } }
+/* ---------- Life & Values: four values side by side, hobbies and tastes as rows ---------- */
+.values { display: grid; grid-template-columns: repeat(4, 1fr); }
+.values li { display: flex; flex-direction: column; padding: 16px 22px 4px; border-left: 1px solid var(--line); }
+.values li:first-child { padding-left: 0; border-left: 0; }
+.value-title { font-family: 'Fraunces Variable', Georgia, serif; font-weight: 400; font-size: 22px; line-height: 1.2; letter-spacing: -0.015em; }
+.value-title::after { content: '.'; color: var(--rose); }
+.value-detail { font-size: 14px; color: var(--fg-2); margin-top: 6px; }
+.beyond-cols { display: grid; grid-template-columns: 1fr 1.5fr; gap: 56px; margin-top: 12px; }
+.hobbies li { padding: 11px 0; border-bottom: 1px solid var(--line); font-family: var(--font-display); font-size: 16px; }
+.tastes { display: grid; grid-template-columns: 140px 1fr; margin: 0; }
+.tastes dt,
+.tastes dd { padding: 11px 0; border-bottom: 1px solid var(--line); }
+.tastes dt { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); padding-top: 15px; }
+:lang(ko) .tastes dt { font-size: 12px; letter-spacing: 0; text-transform: none; padding-top: 14px; }
+.tastes dd { margin: 0; font-family: var(--font-display); font-size: 16px; }
+@media (max-width: 767px) {
+  .values { grid-template-columns: repeat(2, 1fr); }
+  .values li:nth-child(odd) { padding-left: 0; border-left: 0; }
+  .value-title { font-size: 20px; }
+  .beyond-cols { grid-template-columns: 1fr; gap: 0; }
+  .tastes { grid-template-columns: 104px 1fr; }
+}
 
 /* ---------- Phone ---------- */
 @media (max-width: 767px) {
