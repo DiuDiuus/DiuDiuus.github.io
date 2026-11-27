@@ -251,6 +251,40 @@ describe('About', () => {
   });
 });
 
+describe('item pages', () => {
+  it('introduces Projects with a subtitle and a live project count', () => {
+    const n = yamlFiles('projects').length;
+    const en = decode(read('projects/index.html'));
+    const ko = decode(read('ko/projects/index.html'));
+    expect(en).toContain('Data and AI systems built in industry, 2021–2025.');
+    expect(en).toContain(`${n} projects`);
+    expect(ko).toContain('산업 현장에서 만든 데이터·AI 시스템, 2021–2025.');
+    expect(ko).toContain(`프로젝트 ${n}개`);
+    for (const page of [en, ko]) expect(page).not.toContain('Newest first');
+  });
+
+  it('lays items out as two-column rows divided by hairlines, not boxed cards', () => {
+    const css = allCss();
+    expect(css).toMatch(/\.item\{[^}]*display:grid/);
+    expect(css).toMatch(/\.item\{[^}]*grid-template-columns:minmax\(200px,\s*300px\)\s*1fr/);
+    expect(css).not.toMatch(/\.item\{[^}]*background:#fff/);
+    expect(phoneCss(css)).toMatch(/\.item\{[^}]*grid-template-columns:1fr/);
+  });
+
+  it('keeps anchored items clear of the sticky header', () => {
+    const css = allCss();
+    expect(css).toMatch(/\.item\{[^}]*scroll-margin-top:calc\(var\(--header-h\)\s*\+\s*24px\)/);
+    const base = Number((css.match(/:root\{[^}]*--header-h:(\d+)px/) ?? [])[1] ?? 0);
+    const phone = Number((phoneCss(css).match(/--header-h:(\d+)px/) ?? [])[1] ?? 0);
+    expect(base).toBeGreaterThanOrEqual(56);
+    expect(phone).toBeGreaterThanOrEqual(96);
+  });
+
+  it('writes Korean labels without uppercase or letter-spacing', () => {
+    expect(allCss()).toMatch(/:lang\(ko\) \.label[^{]*\{[^}]*text-transform:none/);
+  });
+});
+
 describe('pages', () => {
   it.each(['', 'projects/', 'research/', 'experience/'])('builds /%s in English and Korean', (p) => {
     expect(read(`${p}index.html`)).toContain('<html lang="en"');

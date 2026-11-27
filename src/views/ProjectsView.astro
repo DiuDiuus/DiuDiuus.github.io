@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import ProjectItem from '../components/ProjectItem.astro';
-import { t } from '../i18n/ui';
+import { countLabel, t } from '../i18n/ui';
 import type { Lang } from '../i18n/utils';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { byOrder } from '../lib/sort';
@@ -15,6 +15,8 @@ const projects = byOrder(await getCollection('projects'));
 
 <SiteLayout lang={lang} tab="projects" title={t(lang, 'nav.projects')}>
   <h1 class="page-title">{t(lang, 'nav.projects')}</h1>
+  <p class="page-sub">{t(lang, 'projectsSub')}</p>
+  <div class="label"><span>{countLabel(lang, projects.length)}</span></div>
   {projects.map((entry) => <ProjectItem entry={entry} lang={lang} />)}
 </SiteLayout>
 
