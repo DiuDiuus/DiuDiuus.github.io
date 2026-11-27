@@ -76,12 +76,37 @@ describe('sidebar and layout', () => {
     // scroll-driven, only where supported and only when the visitor allows motion
     const block = css.match(/@supports \(animation-timeline:view\(\)\)\{@media \(prefers-reduced-motion:no-preference\)\{([\s\S]*?)\}\}\}/);
     expect(block, 'guarded scroll-reveal block').not.toBeNull();
-    // the minifier may fold animation-timeline into the animation shorthand
-    expect(block![1]).toMatch(/\.item[^{]*\{[^}]*(animation-timeline:view\(\)|animation:[^;}]*view\(\))/);
+    // animation-timeline must stay a separate declaration: browsers reject view() inside the
+    // \`animation\` shorthand and drop the whole rule (this shipped once, via the minifier)
+    expect(block![1]).toMatch(/\.item[^{]*\{[^}]*animation-timeline:view\(\)/);
+    expect(block![1]).not.toMatch(/animation:[^;}]*view\(\)/);
     expect(css).toMatch(/@keyframes scroll-reveal\{(0%|from)\{[^}]*opacity:0/);
     // outside the guarded block nothing starts invisible
     const outside = css.replace(block![0], '');
     expect(outside).not.toMatch(/\.item\{[^}]*opacity:0/);
+  });
+
+  it('keeps the phone header still during page transitions and hides its tab scrollbar', () => {
+    const css = walk(dist)
+      .filter((f) => f.endsWith('.css'))
+      .map((f) => readFileSync(f, 'utf8'))
+      .join('\n');
+    // the minifier may write the query as (max-width:767px) or (width<=767px)
+    const phone = (css.match(/@media \((?:max-width:767px|width<=767px)\)\{([\s\S]*?)\}\s*(?=@|$)/g) ?? []).join('\n');
+    // the header scrolls with the page, so morphing its position makes it fly in from above
+    expect(phone).toMatch(/::view-transition-group\(mobile-header\)\{animation:none/);
+    expect(phone).toMatch(/\.mobile-header \.nav-indicator\{[^}]*view-transition-name:none/);
+    // the horizontally scrollable tab row must not show a scrollbar band
+    expect(phone).toMatch(/\.mobile-header \.nav\{[^}]*scrollbar-width:none/);
+  });
+
+  it('finishes revealing a card within the first 40% of its entry', () => {
+    const css = walk(dist)
+      .filter((f) => f.endsWith('.css'))
+      .map((f) => readFileSync(f, 'utf8'))
+      .join('\n');
+    const end = Number((css.match(/animation-range:entry(?: 0%)? entry (\d+)%/) ?? [])[1] ?? 100);
+    expect(end).toBeLessThanOrEqual(40);
   });
 
   it('loads GoatCounter only when a site code is configured', () => {

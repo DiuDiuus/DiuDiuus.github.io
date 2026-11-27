@@ -225,9 +225,21 @@ h1.page-title {
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .item, .values li, .tastes, .section-title, main .label, main .chips, main .facts {
-      animation: scroll-reveal linear both;
+      /* longhands only: a minifier folding view() into the \`animation\` shorthand makes browsers drop the rule */
+      animation-name: scroll-reveal;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: view();
-      animation-range: entry 0% entry 80%;
+      animation-range: entry 0% entry 40%; /* fully visible soon after it enters, not while still mid-screen */
     }
   }
+}
+
+/* Phone: the header scrolls with the page, so morphing its position on navigation made it fly in from above.
+   Snap it in place instead, and hide the tab row's scrollbar (the row still scrolls by swipe). */
+@media (max-width: 767px) {
+  ::view-transition-group(mobile-header) { animation: none; }
+  .mobile-header .nav-indicator { view-transition-name: none; }
+  .mobile-header .nav { scrollbar-width: none; }
+  .mobile-header .nav::-webkit-scrollbar { display: none; }
 }
