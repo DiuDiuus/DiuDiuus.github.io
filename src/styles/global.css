@@ -106,6 +106,46 @@ main { padding-bottom: 56px; }
   .foot-inner .copy { margin-left: 0; flex-basis: 100%; }
 }
 
+/* ---------- About: photo header, four facts, featured list beside skills ---------- */
+.intro-head { display: grid; grid-template-columns: 148px 1fr; gap: 34px; align-items: start; margin: 36px 0 24px; }
+.photo { display: block; width: 148px; height: 148px; object-fit: cover; object-position: 50% 50%; box-shadow: 8px 8px 0 var(--rose); }
+.name-ko { font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+h1.name {
+  font-family: 'Fraunces Variable', Georgia, serif;
+  font-weight: 450;
+  font-size: 34px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+.title { font-size: 14px; font-weight: 600; }
+.affiliation { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.intro-head .lead { font-size: 15px; color: var(--fg-2); max-width: 640px; margin: 0; }
+.about-cols { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; align-items: start; }
+.featured-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  color: inherit;
+  text-decoration: none;
+}
+.f-title { font-family: var(--font-display); font-weight: 450; font-size: 18px; line-height: 1.3; letter-spacing: -0.01em; transition: color 0.2s, transform 0.25s; }
+.f-when { font-size: 12px; color: var(--muted); white-space: nowrap; padding-top: 4px; }
+.f-sum { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+@media (hover: hover) {
+  .featured-row:hover .f-title { color: var(--rose-text); transform: translateX(6px); }
+}
+.langs { font-size: 13.5px; color: var(--fg-2); }
+@media (max-width: 767px) {
+  .intro-head { grid-template-columns: 1fr; gap: 20px; margin-top: 24px; }
+  .photo { width: 96px; height: 96px; box-shadow: 6px 6px 0 var(--rose); }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+  .about-cols { grid-template-columns: 1fr; gap: 8px; }
+  .f-when { grid-column: 1 / -1; padding-top: 0; }
+}
+
 /* ---------- Main content ---------- */
 h1.page-title {
   font-family: var(--font-display);
@@ -119,14 +159,15 @@ h1.page-title {
 .facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 22px;
+  gap: 8px 40px;
   font-size: 13px;
-  padding: 10px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  margin-bottom: 28px;
 }
-.facts b { color: var(--muted); margin-right: 6px; }
+.facts b { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+:lang(ko) .facts b { font-size: 12px; letter-spacing: 0; text-transform: none; }
 .label {
   display: flex;
   justify-content: space-between;

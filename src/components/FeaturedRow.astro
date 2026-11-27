@@ -1,0 +1,19 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { locText, tabPath, type Lang } from '../i18n/utils';
+import { formatPeriod } from '../lib/dates';
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+  lang: Lang;
+}
+const { entry, lang } = Astro.props;
+const d = entry.data;
+const text = locText(d.en, d.ko, lang);
+---
+
+<a class="featured-row" href={`${tabPath('projects', lang)}#${entry.id}`}>
+  <span class="f-title">{text.title}</span>
+  <span class="f-when">{formatPeriod(d.start, d.end, lang)}</span>
+  {text.summary && <span class="f-sum">{text.summary}</span>}
+</a>

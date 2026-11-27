@@ -204,6 +204,53 @@ describe('header and footer', () => {
   });
 });
 
+describe('About', () => {
+  const profile = () => parse(readFileSync(join(contentDir, 'profile.yaml'), 'utf8')).main;
+  const factsOf = (html: string) => {
+    const at = html.indexOf('<div class="facts">');
+    return html.slice(at, html.indexOf('</div>', at));
+  };
+
+  it('opens with the photo, name, title and intro instead of a page title', () => {
+    const home = read('index.html');
+    expect(home).toContain('<h1 class="name">Jiwoo <span class="name-accent">Kim</span></h1>');
+    expect(decode(home)).toContain(profile().title.en);
+    expect(decode(home)).toContain(profile().intro.en);
+    expect(home).not.toContain('<h1 class="page-title">');
+    expect(read('ko/index.html')).toContain('class="name-ko">김지우<');
+  });
+
+  it('shows the photo on About only', () => {
+    const img = '<img class="photo" src="/images/profile.jpg"';
+    for (const page of ['index.html', 'ko/index.html']) expect(read(page), page).toContain(img);
+    for (const page of ['projects/index.html', 'research/index.html', 'experience/index.html', 'beyond/index.html', '404.html']) {
+      expect(read(page), page).not.toContain(img);
+    }
+  });
+
+  it('lists four facts, with Research between Now and Next', () => {
+    for (const [page, labels, focus] of [
+      ['index.html', ['Now', 'Research', 'Next', 'Based in'], 'Graph anomaly detection'],
+      ['ko/index.html', ['지금', '연구', '다음', '거주'], '그래프 이상탐지'],
+    ] as const) {
+      const facts = decode(factsOf(read(page)));
+      const at = labels.map((l) => facts.indexOf(`<b>${l}</b>`));
+      expect(at.every((i) => i > -1), `${page}: ${at}`).toBe(true);
+      expect([...at].sort((a, b) => a - b), page).toEqual(at);
+      expect(facts, page).toContain(focus);
+    }
+  });
+
+  it('lists three featured projects that link into the Projects page', () => {
+    for (const [page, base] of [['index.html', '/projects/'], ['ko/index.html', '/ko/projects/']] as const) {
+      const html = read(page);
+      expect(count(html, 'class="featured-row"'), page).toBe(3);
+      expect(html, page).toContain(`href="${base}#synthetic-data-generation"`);
+      expect(count(html, '<article class="item"'), page).toBe(0);
+    }
+  });
+});
+
 describe('pages', () => {
   it.each(['', 'projects/', 'research/', 'experience/'])('builds /%s in English and Korean', (p) => {
     expect(read(`${p}index.html`)).toContain('<html lang="en"');
@@ -255,7 +302,7 @@ describe('pages', () => {
 
   it('shows every item fully expanded, with no toggles', () => {
     expect(count(read('projects/index.html'), '<article class="item"')).toBe(5);
-    expect(count(read('index.html'), '<article class="item"')).toBe(3);
+    expect(count(read('index.html'), '<article class="item"')).toBe(0); // About lists compact featured rows instead
     expect(count(read('experience/index.html'), '<article class="item"')).toBe(4);
     expect(decode(read('projects/index.html'))).toContain('Sensitive tabular and time-series data could not be shared freely');
     for (const f of walk(dist).filter((f) => f.endsWith('.html'))) {
@@ -298,7 +345,7 @@ describe('pages', () => {
 
   it('keeps the menu and page titles in English on Korean pages', () => {
     const tabs: [string, string][] = [
-      ['ko/index.html', 'About'],
+      ['ko/index.html', ''], // About's h1 is the name; its menu is still checked below
       ['ko/projects/index.html', 'Projects'],
       ['ko/research/index.html', 'Research'],
       ['ko/experience/index.html', 'Experience & Education'],
@@ -306,7 +353,7 @@ describe('pages', () => {
     ];
     for (const [path, h1] of tabs) {
       const page = decode(read(path));
-      expect(page, path).toContain(`<h1 class="page-title">${h1}</h1>`);
+      if (h1) expect(page, path).toContain(`<h1 class="page-title">${h1}</h1>`);
       for (const label of ['About', 'Projects', 'Research', 'Experience', 'Life & Values']) {
         expect(page, `${path} menu: ${label}`).toMatch(new RegExp(`href="/ko/[a-z/]*"[^>]*>\\s*${label}\\s*(<span class="nav-indicator"[^>]*></span>\\s*)?</a>`));
       }

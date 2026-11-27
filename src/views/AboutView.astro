@@ -1,6 +1,6 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
-import ProjectItem from '../components/ProjectItem.astro';
+import FeaturedRow from '../components/FeaturedRow.astro';
 import { t } from '../i18n/ui';
 import { pick, tabPath, type Lang } from '../i18n/utils';
 import SiteLayout from '../layouts/SiteLayout.astro';
@@ -15,20 +15,35 @@ const projects = featured(await getCollection('projects'));
 ---
 
 <SiteLayout lang={lang} tab="about" title={t(lang, 'nav.about')}>
-  <h1 class="page-title">{t(lang, 'nav.about')}</h1>
-  <p class="lead">{pick(profile.intro, lang)}</p>
+  <section class="intro-head">
+    <img class="photo" src="/images/profile.jpg" width="148" height="148" alt={pick(profile.name, lang)} />
+    <div>
+      {lang === 'ko' && <p class="name-ko">{pick(profile.name, 'ko')}</p>}
+      <h1 class="name">Jiwoo <span class="name-accent">Kim</span></h1>
+      <p class="title">{pick(profile.title, lang)}</p>
+      <p class="affiliation">{pick(profile.affiliation, lang)}</p>
+      <p class="lead">{pick(profile.intro, lang)}</p>
+    </div>
+  </section>
   <div class="facts">
     <span><b>{t(lang, 'now')}</b>{pick(profile.now, lang)}</span>
+    <span><b>{t(lang, 'focus')}</b>{pick(profile.focus, lang)}</span>
     <span><b>{t(lang, 'next')}</b>{pick(profile.next, lang)}</span>
     <span><b>{t(lang, 'basedIn')}</b>{pick(profile.basedIn, lang)}</span>
   </div>
-  <div class="label"><span>{t(lang, 'skills')}</span></div>
-  <div class="chips">{profile.skills.map((s) => <span class="chip">{s}</span>)}</div>
-  <div class="label"><span>{t(lang, 'languages')}</span></div>
-  <p>{pick(profile.languages, lang)}</p>
-  <div class="label">
-    <span>{t(lang, 'featured')}</span>
-    <a href={tabPath('projects', lang)}>{t(lang, 'seeAll')}</a>
+  <div class="about-cols">
+    <section>
+      <div class="label">
+        <span>{t(lang, 'featured')}</span>
+        <a href={tabPath('projects', lang)}>{t(lang, 'seeAll')}</a>
+      </div>
+      {projects.map((entry) => <FeaturedRow entry={entry} lang={lang} />)}
+    </section>
+    <section>
+      <div class="label"><span>{t(lang, 'skills')}</span></div>
+      <div class="chips">{profile.skills.map((s) => <span class="chip">{s}</span>)}</div>
+      <div class="label"><span>{t(lang, 'languages')}</span></div>
+      <p class="langs">{pick(profile.languages, lang)}</p>
+    </section>
   </div>
-  {projects.map((entry) => <ProjectItem entry={entry} lang={lang} />)}
 </SiteLayout>
