@@ -1,0 +1,21 @@
+---
+import { tabPath, type Lang, type Tab } from '../i18n/utils';
+import LangToggle from './LangToggle.astro';
+import Nav from './Nav.astro';
+
+interface Props {
+  lang: Lang;
+  tab: Tab;
+  hasBeyond: boolean;
+}
+const { lang, tab, hasBeyond } = Astro.props;
+---
+
+<header class="site-header">
+  <div class="bar">
+    <a class="logo" href={tabPath('about', lang)}>Jiwoo <span class="name-accent">Kim</span></a>
+    <Nav lang={lang} tab={tab} hasBeyond={hasBeyond} />
+    <LangToggle lang={lang} tab={tab} />
+    <a class="btn btn-cv" href="/cv/Jiwoo_Kim_CV.pdf" target="_blank" rel="noopener">CV ↓</a>
+  </div>
+</header>

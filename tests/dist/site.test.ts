@@ -15,12 +15,18 @@ function walk(dir: string): string[] {
   });
 }
 const textFiles = () => walk(dist).filter((f) => /\.(html|css|js|xml|txt|json)$/.test(f));
+const allCss = () =>
+  walk(dist)
+    .filter((f) => f.endsWith('.css'))
+    .map((f) => readFileSync(f, 'utf8'))
+    .join('\n');
+const phoneCss = (css: string) =>
+  (css.match(/@media \((?:max-width:767px|width<=767px)\)\{([\s\S]*?)\}\s*(?=@|$)/g) ?? []).join('\n');
 
 describe('sidebar and layout', () => {
-  it('renders the English home page with the sidebar copy', () => {
+  it('renders the English home page with the CV link', () => {
     const home = read('index.html');
     expect(home).toContain('<html lang="en"');
-    expect(home).toContain('Data Scientist · Integrated M.S./Ph.D. Student');
     expect(home).toContain('href="/cv/Jiwoo_Kim_CV.pdf"');
   });
 
@@ -49,7 +55,7 @@ describe('sidebar and layout', () => {
       .join('\n');
     expect(css).toMatch(/@view-transition\{navigation:auto\}/);
     expect(css).toMatch(/@media \(prefers-reduced-motion:reduce\)\{@view-transition\{navigation:none\}/);
-    expect(css).toMatch(/\.sidebar\{[^}]*view-transition-name:sidebar/);
+    expect(css).toMatch(/\.site-header\{[^}]*view-transition-name:site-header/);
     expect(css).toMatch(/\.nav-indicator\{[^}]*view-transition-name:nav-indicator/);
     // noticeable: the new page slides in for at least 0.4s, and the menu marker glides for at least 0.4s
     // durations may be minified to seconds (".52s") or kept in ms
@@ -62,8 +68,8 @@ describe('sidebar and layout', () => {
     expect(css).toMatch(/@keyframes vt-in\{(0%|from)\{[^}]*translateX?\(\d+px/);
     for (const page of ['index.html', 'projects/index.html', 'ko/beyond/index.html']) {
       const html = read(page);
-      // one indicator per menu (sidebar + mobile header), inside the current tab's link only
-      expect(count(html, 'class="nav-indicator"'), page).toBe(2);
+      // one menu per page, so one indicator, inside the current tab's link only
+      expect(count(html, 'class="nav-indicator"'), page).toBe(1);
       expect(html, page).toMatch(/aria-current="page"[^>]*>[^<]*<span class="nav-indicator"/);
     }
   });
@@ -109,18 +115,10 @@ describe('sidebar and layout', () => {
     }
   });
 
-  it('keeps the phone header still during page transitions and hides its tab scrollbar', () => {
-    const css = walk(dist)
-      .filter((f) => f.endsWith('.css'))
-      .map((f) => readFileSync(f, 'utf8'))
-      .join('\n');
-    // the minifier may write the query as (max-width:767px) or (width<=767px)
-    const phone = (css.match(/@media \((?:max-width:767px|width<=767px)\)\{([\s\S]*?)\}\s*(?=@|$)/g) ?? []).join('\n');
-    // the header scrolls with the page, so morphing its position makes it fly in from above
-    expect(phone).toMatch(/::view-transition-group\(mobile-header\)\{animation:none/);
-    expect(phone).toMatch(/\.mobile-header \.nav-indicator\{[^}]*view-transition-name:none/);
-    // the horizontally scrollable tab row must not show a scrollbar band
-    expect(phone).toMatch(/\.mobile-header \.nav\{[^}]*scrollbar-width:none/);
+  it('keeps the phone tab row swipeable without a scrollbar band', () => {
+    const css = allCss();
+    expect(phoneCss(css)).toMatch(/\.site-header \.nav\{[^}]*scrollbar-width:none/);
+    expect(css).not.toContain('mobile-header');
   });
 
   it('loads GoatCounter only when a site code is configured', () => {
@@ -159,6 +157,52 @@ const yamlFiles = (dir: string) =>
     .filter((f) => f.endsWith('.yaml'))
     .map((f) => parse(readFileSync(join(contentDir, dir, f), 'utf8')));
 const count = (s: string, needle: string) => s.split(needle).length - 1;
+
+describe('header and footer', () => {
+  const pages: [string, string][] = [
+    ['index.html', '/'],
+    ['projects/index.html', '/'],
+    ['ko/research/index.html', '/ko/'],
+    ['ko/beyond/index.html', '/ko/'],
+    ['404.html', '/'],
+  ];
+
+  it('puts one sticky top bar on every page, with logo, menu, language switch and CV', () => {
+    for (const [page, home] of pages) {
+      const html = read(page);
+      expect(count(html, '<header class="site-header"'), page).toBe(1);
+      expect(html, page).toContain(`class="logo" href="${home}"`);
+      expect(html, page).toContain('class="lang-toggle"');
+      expect(html, page).toContain('href="/cv/Jiwoo_Kim_CV.pdf"');
+      expect(count(html, 'class="nav-indicator"'), page).toBe(1);
+      expect(html, page).not.toContain('class="sidebar"');
+      expect(html, page).not.toContain('mobile-header');
+    }
+    const css = allCss();
+    expect(css).toMatch(/\.site-header\{[^}]*position:sticky/);
+    expect(css).toMatch(/\.site-header\{[^}]*view-transition-name:site-header/);
+  });
+
+  it('puts email and CV in a footer on every page, with a no-JS fallback', () => {
+    for (const [page] of pages) {
+      const html = read(page);
+      const at = html.indexOf('<footer class="site-footer"');
+      expect(at, page).toBeGreaterThan(-1);
+      const footer = html.slice(at);
+      expect(footer, page).toContain('data-e=');
+      expect(footer, page).toContain('<noscript>');
+      expect(footer, page).toContain('/cv/Jiwoo_Kim_CV.pdf');
+      expect(footer, page).toContain('© Jiwoo Kim');
+    }
+  });
+
+  it('uses the paper palette and readable greys', () => {
+    const css = allCss();
+    expect(css).toMatch(/--bg:#f7f4ef/i);
+    expect(css).toMatch(/--muted:#686c7e/i);
+    expect(css).not.toMatch(/[^-]color:#(8a8c99|6c7082)/i);
+  });
+});
 
 describe('pages', () => {
   it.each(['', 'projects/', 'research/', 'experience/'])('builds /%s in English and Korean', (p) => {

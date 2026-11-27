@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Lang } from '../i18n/utils';
+import { encodeEmail } from '../lib/email';
+import EmailLink from './EmailLink.astro';
+
+interface Props {
+  lang: Lang;
+  profile: CollectionEntry<'profile'>['data'];
+}
+const { lang, profile } = Astro.props;
+const { github, linkedin, scholar } = profile.links;
+---
+
+<footer class="site-footer">
+  <div class="foot-inner">
+    <EmailLink code={encodeEmail(profile.email)} lang={lang} />
+    <a class="btn" href="/cv/Jiwoo_Kim_CV.pdf" target="_blank" rel="noopener">CV ↓</a>
+    {github && <a class="btn" href={github} rel="me noopener" target="_blank">GitHub</a>}
+    {linkedin && <a class="btn" href={linkedin} rel="me noopener" target="_blank">LinkedIn</a>}
+    {scholar && <a class="btn" href={scholar} rel="noopener" target="_blank">Scholar</a>}
+    <span class="copy">© Jiwoo Kim</span>
+  </div>
+</footer>
