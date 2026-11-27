@@ -1,0 +1,142 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=DM+Sans:opsz,wght@9..40,400..700&display=swap" rel="stylesheet">
+
+<style>
+  .sec-t { font-size:1.05rem; font-weight:600; margin:2rem 0 .3rem; }
+  .sec-n { margin:0 0 .7rem; color: var(--text-secondary); font-size:.9rem; }
+  .win { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 8px 28px rgba(0,0,0,.10); }
+  .win .bar { height: 28px; background: #E9E6E0; display:flex; align-items:center; gap:6px; padding:0 12px; font: 11px 'DM Sans', sans-serif; color:#777; }
+  .win .bar i { width:9px; height:9px; border-radius:50%; background:#D3CFC7; display:inline-block; }
+  .win .bar .url { margin-left:10px; background:#F6F4F0; padding:2px 10px; border-radius:6px; }
+  .fit { overflow: hidden; }
+
+  .c { width:1100px; height:720px; transform-origin:0 0; text-align:left; background:#F7F4EF; color:#1B2238; font-family:'DM Sans', sans-serif; font-size:14px; line-height:1.55; display:flex; flex-direction:column; }
+  .c * { box-sizing:border-box; }
+  .c p { margin:0; }
+  .c .rose { color:#E895A8; }
+  .c .top { display:flex; align-items:center; gap:28px; font-size:13px; padding:22px 56px 14px; border-bottom:1px solid #E3DDD3; flex:none; }
+  .c .top .logo { font-family:'Fraunces', serif; font-size:17px; font-weight:500; margin-right:auto; letter-spacing:-.01em; }
+  .c .top a { color:#6C7082; }
+  .c .top a.on { color:#1B2238; border-bottom:1.5px solid #E895A8; padding-bottom:2px; }
+  .c .top .lang { font-size:11px; color:#8A8C99; }
+  .c .top .cv { background:#1B2238; color:#F7F4EF; padding:5px 14px; border-radius:99px; }
+  .c .scroll { overflow-y:auto; padding:0 56px 40px; flex:1; }
+  .c .scroll::-webkit-scrollbar { width:0; }
+  .c .cap { font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:#8A8C99; font-weight:500; }
+  .c .rule { display:flex; justify-content:space-between; border-bottom:1px solid #1B2238; padding-bottom:7px; margin-bottom:2px; }
+  .c .rule a { font-size:12px; letter-spacing:0; text-transform:none; color:#1B2238; }
+
+  /* About header: photo + who I am, at reading size */
+  .c .who { display:grid; grid-template-columns: 148px 1fr; gap:34px; align-items:start; margin:32px 0 22px; }
+  .c .who .pic { width:148px; height:148px; box-shadow:8px 8px 0 #E895A8; }
+  .c .who .pic img { width:100%; height:100%; object-fit:cover; display:block; }
+  .c .who h1 { font-family:'Fraunces', serif; font-weight:450; font-size:34px; line-height:1.05; letter-spacing:-.02em; margin:0 0 6px; }
+  .c .who .role { font-size:14px; font-weight:600; }
+  .c .who .aff { font-size:13px; color:#6C7082; margin-bottom:12px; }
+  .c .who .intro { font-size:15px; color:#2B324A; max-width:640px; }
+  .c .facts { display:flex; gap:40px; font-size:13px; padding:12px 0; border-top:1px solid #E3DDD3; border-bottom:1px solid #E3DDD3; margin-bottom:26px; }
+  .c .facts b { display:block; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#8A8C99; font-weight:500; }
+  .c .cols { display:grid; grid-template-columns: 1fr 300px; gap:48px; }
+  .c .row { display:grid; grid-template-columns: 1fr auto; gap:2px 16px; padding:12px 0; border-bottom:1px solid #DCD7CE; }
+  .c .row h4 { margin:0; font-family:'Fraunces', serif; font-weight:450; font-size:18px; letter-spacing:-.01em; transition: color .2s, transform .25s; }
+  .c .row:hover h4 { color:#C27387; transform:translateX(6px); }
+  .c .row .y { font-size:12px; color:#8A8C99; }
+  .c .row p { grid-column:1 / 3; font-size:13px; color:#6C7082; }
+  .c .chips { display:flex; flex-wrap:wrap; gap:5px; margin:10px 0 22px; }
+  .c .chips span { font-size:11.5px; padding:2px 10px; border-radius:99px; border:1px solid #D3CCC1; color:#4A5068; }
+  .c .langs { font-size:13px; margin-top:10px; color:#2B324A; }
+
+  /* Projects page at reading size */
+  .c h2.pt { font-family:'Fraunces', serif; font-weight:450; font-size:32px; line-height:1.1; letter-spacing:-.02em; margin:30px 0 4px; }
+  .c .pt-sub { font-size:14px; color:#6C7082; margin-bottom:18px; }
+  .c .pj { display:grid; grid-template-columns: 300px 1fr; gap:32px; padding:18px 0 20px; border-bottom:1px solid #DCD7CE; }
+  .c .pj h3 { margin:0; font-family:'Fraunces', serif; font-weight:450; font-size:19px; line-height:1.2; letter-spacing:-.01em; transition: color .2s, transform .25s; }
+  .c .pj:hover h3 { color:#C27387; transform:translateX(6px); }
+  .c .pj .when { font-size:12px; color:#8A8C99; margin-top:6px; }
+  .c .pj .sum { font-size:14.5px; margin-bottom:8px; }
+  .c .pj dl { display:grid; grid-template-columns:84px 1fr; gap:4px 14px; margin:0 0 10px; font-size:13px; color:#4A5068; }
+  .c .pj dt { font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#8A8C99; padding-top:3px; }
+  .c .pj dd { margin:0; }
+  .c .tags { display:flex; gap:5px; flex-wrap:wrap; }
+  .c .tags span { font-size:11px; padding:1px 9px; border-radius:99px; border:1px solid #D3CCC1; color:#4A5068; }
+  .c .foot { display:flex; gap:18px; font-size:12.5px; color:#6C7082; padding-top:22px; }
+  .c .foot a { color:#1B2238; border-bottom:1px solid #E895A8; }
+
+  /* before/after size strip */
+  .sizes { display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+  .sizes div { background:#F7F4EF; border-radius:10px; padding:16px 18px; color:#1B2238; text-align:left; }
+  .sizes .cap2 { font: 600 11px 'DM Sans', sans-serif; color:#8A8C99; margin-bottom:8px; }
+  .sizes .big { font-family:'Fraunces', serif; font-weight:350; font-size:40px; line-height:1.05; letter-spacing:-.03em; }
+  .sizes .small { font-family:'Fraunces', serif; font-weight:450; font-size:19px; line-height:1.2; }
+</style>
+
+<h2>C 수정안: 큰 문장 없이, 읽기 편한 크기로</h2>
+<p class="subtitle">위쪽 메뉴, 종이색 바탕, 얇은 선으로 나누는 C의 구조는 그대로예요. 큰 문장을 없애고 모든 글씨를 한눈에 읽히는 크기로 줄였어요. 각 화면 안에서 스크롤할 수 있어요.</p>
+
+<p class="sec-t">1. About</p>
+<p class="sec-n">큰 문장 자리에 사진, 이름, 소개가 와요. 아래는 두 칸으로 나눠서 왼쪽에 대표 프로젝트(요약 항상 보임), 오른쪽에 기술과 언어를 둬요. 넓은 화면을 쓰니 스크롤도 짧아져요.</p>
+<div class="win"><div class="bar"><i></i><i></i><i></i><span class="url">diudiuus.github.io</span></div>
+  <div class="fit"><div class="c">
+    <div class="top"><span class="logo">Jiwoo <span class="rose">Kim</span></span><a class="on">About</a><a>Projects</a><a>Research</a><a>Experience</a><a>Life &amp; Values</a><span class="lang">EN · KO</span><span class="cv">CV ↓</span></div>
+    <div class="scroll">
+      <div class="who">
+        <div class="pic"><img src="/files/profile.jpg" alt=""></div>
+        <div>
+          <h1>Jiwoo <span class="rose">Kim</span></h1>
+          <p class="role">Data Scientist · Integrated M.S./Ph.D. Student</p>
+          <p class="aff">Statistics &amp; Data Science, Yonsei University · Seoul</p>
+          <p class="intro">I'm an integrated M.S./Ph.D. student at Yonsei University, researching graph anomaly detection. I also have nearly three years of industry experience building data and AI systems for synthetic data, financial risk, and text analytics.</p>
+        </div>
+      </div>
+      <div class="facts"><span><b>Now</b>Integrated M.S./Ph.D., Yonsei (2021–)</span><span><b>Research</b>Graph anomaly detection</span><span><b>Next</b>Data Scientist roles, 2027</span><span><b>Based in</b>Seoul</span></div>
+      <div class="cols">
+        <div>
+          <div class="rule"><span class="cap">Featured projects</span><a>See all →</a></div>
+          <div class="row"><h4>Synthetic Data Generation System</h4><span class="y">2022–2025</span><p>A system for sharing sensitive tabular and time-series data safely through synthetic data.</p></div>
+          <div class="row"><h4>Financial Early Warning System (Vietnam)</h4><span class="y">2022–2025</span><p>An early warning system for Vietnam's financial sector, built for a crisis management capacity-building project.</p></div>
+          <div class="row"><h4>Semiconductor Market Risk Index</h4><span class="y">2022–2025</span><p>A text-based risk index for the semiconductor market, built from news data.</p></div>
+        </div>
+        <div>
+          <div class="rule"><span class="cap">Skills</span></div>
+          <div class="chips"><span>Python</span><span>R</span><span>SQL</span><span>Machine Learning</span><span>Deep Learning</span><span>NLP / Text Mining</span><span>Time-Series Analysis</span><span>Synthetic Data Generation</span><span>Data Integration</span><span>Risk Index Construction</span></div>
+          <div class="rule"><span class="cap">Languages</span></div>
+          <p class="langs">Korean (Native), English (Professional)</p>
+        </div>
+      </div>
+      <div class="foot"><a>Email</a><a>CV</a><span>© Jiwoo Kim</span></div>
+    </div>
+  </div></div>
+</div>
+
+<p class="sec-t">2. Projects</p>
+<p class="sec-n">페이지 제목과 프로젝트 제목을 지난 시안의 절반 정도 크기로 줄였어요. 한 화면에 프로젝트가 두세 개씩 들어와요.</p>
+<div class="win"><div class="bar"><i></i><i></i><i></i><span class="url">diudiuus.github.io/projects</span></div>
+  <div class="fit"><div class="c">
+    <div class="top"><span class="logo">Jiwoo <span class="rose">Kim</span></span><a>About</a><a class="on">Projects</a><a>Research</a><a>Experience</a><a>Life &amp; Values</a><span class="lang">EN · KO</span><span class="cv">CV ↓</span></div>
+    <div class="scroll">
+      <h2 class="pt">Projects</h2>
+      <p class="pt-sub">Data and AI systems built in industry, 2021–2025.</p>
+      <div class="rule"><span class="cap">Five projects</span><span class="cap">Newest first</span></div>
+      <div class="pj"><div><h3>Synthetic Data Generation System</h3><p class="when">Greta Inc. · May 2022 – Jan 2025</p></div><div><p class="sum">A system for sharing sensitive tabular and time-series data safely through synthetic data.</p><dl><dt>Problem</dt><dd>Sensitive tabular and time-series data could not be shared freely because of privacy constraints.</dd><dt>Approach</dt><dd>Designed and developed a synthetic data generation system for secure, privacy-preserving data sharing, and evaluated the synthetic outputs on statistical fidelity, downstream ML utility, and disclosure risk.</dd></dl><div class="tags"><span>Synthetic data</span><span>Privacy</span><span>Tabular &amp; time series</span></div></div></div>
+      <div class="pj"><div><h3>Financial Early Warning System (Vietnam)</h3><p class="when">Greta Inc. · May 2022 – Jan 2025</p></div><div><p class="sum">An early warning system for Vietnam's financial sector, built for a crisis management capacity-building project.</p><dl><dt>Problem</dt><dd>As part of a crisis management capacity-building project, Vietnam's financial sector needed a way to detect signals of potential systemic stress early.</dd><dt>Approach</dt><dd>Constructed macro-financial indicators and built predictive models that detect signals of potential systemic stress.</dd></dl><div class="tags"><span>Financial risk</span><span>Early warning</span><span>Predictive modeling</span></div></div></div>
+      <div class="pj"><div><h3>Semiconductor Market Risk Index</h3><p class="when">Greta Inc. · May 2022 – Jan 2025</p></div><div><p class="sum">A text-based risk index for the semiconductor market, built from news data.</p><dl><dt>Problem</dt><dd>Industry monitoring and policy planning needed a risk signal for the semiconductor market.</dd><dt>Approach</dt><dd>Developed a text-based market risk index from news data using NLP and text mining techniques.</dd></dl><div class="tags"><span>NLP</span><span>Text mining</span><span>Risk index</span></div></div></div>
+      <div class="pj"><div><h3>Data Integration System</h3><p class="when">Greta Inc. · May 2022 – Jan 2025</p></div><div><p class="sum">Turning heterogeneous datasets from multiple sources into analysis-ready data.</p><dl><dt>Problem</dt><dd>Datasets from multiple sources used different schemas and variable definitions.</dd><dt>Approach</dt><dd>Built a system that standardizes schemas, harmonizes variable definitions, and merges heterogeneous datasets into analysis-ready data, with automated data quality checks.</dd></dl></div></div>
+      <div class="pj"><div><h3>Medical Research Recommendation</h3><p class="when">Tesser Inc. · Jan 2021 – Mar 2021</p></div><div><p class="sum">Recommending relevant case reports by analyzing medical literature.</p><dl><dt>Problem</dt><dd>Relevant case reports had to be identified from a large body of medical literature.</dd><dt>Approach</dt><dd>Developed a text-based recommendation system using NLP-based document representations and similarity search.</dd></dl></div></div>
+    </div>
+  </div></div>
+</div>
+
+
+<script>
+(function () {
+  function fit() {
+    document.querySelectorAll('.fit').forEach(function (f) {
+      var k = f.clientWidth / 1100;
+      f.firstElementChild.style.transform = 'scale(' + k + ')';
+      f.style.height = (720 * k) + 'px';
+    });
+  }
+  window.addEventListener('resize', fit); fit();
+})();
+</script>
