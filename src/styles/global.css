@@ -218,20 +218,21 @@ h1.page-title {
   @view-transition { navigation: none; }
 }
 
-/* ---------- Scroll reveal (scroll-driven; content is never hidden where unsupported) ---------- */
-@keyframes scroll-reveal {
-  from { opacity: 0; transform: translateY(28px); }
+/* ---------- Reveal on view (as in the approved mockup) ----------
+   A small script in SiteLayout marks items with .reveal and adds .in when each one reaches the screen:
+   it rises in over 0.7s, a few at a time, 70ms apart. Without the script, without IntersectionObserver,
+   with reduced motion, or in print, nothing is marked or hidden. */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(18px); }
 }
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .item, .values li, .tastes, .section-title, main .label, main .chips, main .facts {
-      /* longhands only: a minifier folding view() into the \`animation\` shorthand makes browsers drop the rule */
-      animation-name: scroll-reveal;
-      animation-timing-function: linear;
-      animation-fill-mode: both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 40%; /* fully visible soon after it enters, not while still mid-screen */
-    }
+@media screen and (prefers-reduced-motion: no-preference) {
+  .reveal:not(.in) { opacity: 0; }
+  .reveal.in {
+    animation-name: reveal-up;
+    animation-duration: 700ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: backwards; /* hidden during its delay; afterwards hover styles work as usual */
+    animation-delay: var(--reveal-delay, 0ms);
   }
 }
 

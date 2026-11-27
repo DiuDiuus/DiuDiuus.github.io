@@ -68,22 +68,45 @@ describe('sidebar and layout', () => {
     }
   });
 
-  it('reveals content on scroll without ever hiding it from browsers that cannot animate it', () => {
+  it('reveals content like the approved mockup: rises in over ~0.7s, one after another', () => {
     const css = walk(dist)
       .filter((f) => f.endsWith('.css'))
       .map((f) => readFileSync(f, 'utf8'))
       .join('\n');
-    // scroll-driven, only where supported and only when the visitor allows motion
-    const block = css.match(/@supports \(animation-timeline:view\(\)\)\{@media \(prefers-reduced-motion:no-preference\)\{([\s\S]*?)\}\}\}/);
-    expect(block, 'guarded scroll-reveal block').not.toBeNull();
-    // animation-timeline must stay a separate declaration: browsers reject view() inside the
-    // \`animation\` shorthand and drop the whole rule (this shipped once, via the minifier)
-    expect(block![1]).toMatch(/\.item[^{]*\{[^}]*animation-timeline:view\(\)/);
-    expect(block![1]).not.toMatch(/animation:[^;}]*view\(\)/);
-    expect(css).toMatch(/@keyframes scroll-reveal\{(0%|from)\{[^}]*opacity:0/);
-    // outside the guarded block nothing starts invisible
-    const outside = css.replace(block![0], '');
-    expect(outside).not.toMatch(/\.item\{[^}]*opacity:0/);
+    // time-based (not scrubbed by scroll distance), so it is visible on short pages and in every browser
+    expect(css).not.toContain('animation-timeline');
+    const block = css.match(/@media screen and \(prefers-reduced-motion:no-preference\)\{([\s\S]*?\})\}/);
+    expect(block, 'motion-guarded reveal block').not.toBeNull();
+    // only elements the script marked are hidden, and only until they are shown
+    expect(block![1]).toMatch(/\.reveal:not\(\.in\)\{opacity:0/);
+    const inRule = block![1].match(/\.reveal\.in\{([^}]*)\}/);
+    expect(inRule, '.reveal.in rule').not.toBeNull();
+    expect(inRule![1]).toMatch(/animation-name:reveal-up/);
+    const dur = inRule![1].match(/animation-duration:([\d.]+)(ms|s)/);
+    expect(Number(dur![1]) * (dur![2] === 's' ? 1000 : 1)).toBeGreaterThanOrEqual(500);
+    expect(inRule![1]).toMatch(/animation-delay:var\(--reveal-delay/);
+    expect(css).toMatch(/@keyframes reveal-up\{(0%|from)\{[^}]*opacity:0/);
+    // nothing else ever starts invisible
+    expect(css.replace(block![0], '')).not.toMatch(/\.(item|reveal)[^{]*\{[^}]*opacity:0/);
+  });
+
+  it('marks and reveals items with a small script that does nothing without support or with reduced motion', () => {
+    for (const page of ['index.html', 'projects/index.html', 'experience/index.html', 'ko/beyond/index.html', '404.html']) {
+      const html = read(page);
+      const script = html.match(/<script>([^<]*IntersectionObserver[^<]*)<\/script>/);
+      expect(script, page).not.toBeNull();
+      const js = script![1];
+      expect(js).toMatch(/['"]IntersectionObserver['"]\s*in\s*window/);
+      expect(js).toMatch(/prefers-reduced-motion:\s*reduce/);
+      for (const target of ['.item', '.values li', '.tastes', '.section-title', 'main .label', 'main .chips', 'main .facts']) {
+        expect(js, target).toContain(target);
+      }
+      // staggered like the mockup (70ms steps, capped) and each element revealed once
+      expect(js).toMatch(/--reveal-delay/);
+      expect(js).toMatch(/unobserve/);
+      // tags inside a card rise with their card, not a second time on their own
+      expect(js).toMatch(/parentElement\.closest\(/);
+    }
   });
 
   it('keeps the phone header still during page transitions and hides its tab scrollbar', () => {
@@ -98,15 +121,6 @@ describe('sidebar and layout', () => {
     expect(phone).toMatch(/\.mobile-header \.nav-indicator\{[^}]*view-transition-name:none/);
     // the horizontally scrollable tab row must not show a scrollbar band
     expect(phone).toMatch(/\.mobile-header \.nav\{[^}]*scrollbar-width:none/);
-  });
-
-  it('finishes revealing a card within the first 40% of its entry', () => {
-    const css = walk(dist)
-      .filter((f) => f.endsWith('.css'))
-      .map((f) => readFileSync(f, 'utf8'))
-      .join('\n');
-    const end = Number((css.match(/animation-range:entry(?: 0%)? entry (\d+)%/) ?? [])[1] ?? 100);
-    expect(end).toBeLessThanOrEqual(40);
   });
 
   it('loads GoatCounter only when a site code is configured', () => {

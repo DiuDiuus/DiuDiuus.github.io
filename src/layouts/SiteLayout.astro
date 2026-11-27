@@ -66,5 +66,26 @@ const url = (path: string) => new URL(path, site).href;
         <div class="main-inner"><slot /></div>
       </main>
     </div>
+    <script is:inline>
+      // Reveal on view: see "Reveal on view" in global.css. Runs before first paint, so nothing flashes.
+      (() => {
+        if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const io = new IntersectionObserver((entries) => {
+          let n = 0;
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            e.target.style.setProperty('--reveal-delay', Math.min(n++, 6) * 70 + 'ms');
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+        const targets = '.item, .values li, .tastes, .section-title, main .label, main .chips, main .facts';
+        for (const el of document.querySelectorAll(targets)) {
+          if (el.parentElement.closest(targets)) continue; // e.g. tags inside a card rise with the card
+          el.classList.add('reveal');
+          io.observe(el);
+        }
+      })();
+    </script>
   </body>
 </html>
